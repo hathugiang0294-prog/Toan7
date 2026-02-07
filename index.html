@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ôn Tập Toán 7 - Vì Cộng Đồng</title>
+    <!-- Chèn phông chữ Comfortaa -->
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --accent-orange: #f97316; /* Màu cam chủ đạo */
+            --bg: #ffffff; 
+            --text: #334155; 
+            --border-light: #e2e8f0;
+        }
+        
+        body { 
+            font-family: 'Comfortaa', cursive; 
+            line-height: 1.6; 
+            margin: 0; 
+            background: var(--bg); 
+            color: var(--text); 
+        }
+
+        /* Header nhỏ gọn, không lấn át */
+        header { 
+            padding: 30px 20px; 
+            text-align: center; 
+            background: white;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        header h1 { 
+            margin: 0; 
+            font-size: 1.8rem; 
+            font-weight: 700;
+            color: var(--accent-orange);
+        }
+        
+        header p { 
+            margin: 5px 0 20px; 
+            opacity: 0.8; 
+            font-size: 0.9rem;
+        }
+
+        /* Ô tìm kiếm bo góc với viền cam */
+        .search-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            border-radius: 15px;
+            border: 2px solid var(--accent-orange);
+            font-family: 'Comfortaa', cursive;
+            font-size: 0.9rem;
+            outline: none;
+            box-sizing: border-box;
+            transition: box-shadow 0.3s;
+        }
+
+        .search-input:focus {
+            box-shadow: 0 0 10px rgba(249, 115, 22, 0.2);
+        }
+
+        .container { 
+            max-width: 800px; 
+            margin: 30px auto; 
+            padding: 0 20px; 
+        }
+        
+        /* Card Chương - Bo góc và Viền cam */
+        .chapter { 
+            background: white; 
+            border-radius: 20px; 
+            margin-bottom: 25px; 
+            overflow: hidden; 
+            border: 2px solid var(--accent-orange); /* Viền khung màu cam */
+            transition: transform 0.2s ease;
+        }
+        
+        .chapter:hover { 
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(249, 115, 22, 0.1);
+        }
+
+        .chapter-title { 
+            padding: 15px 20px; 
+            margin: 0; 
+            font-size: 1.1rem; 
+            display: flex; 
+            align-items: center; 
+            font-weight: 700;
+            color: var(--accent-orange);
+            border-bottom: 1px solid #fff7ed;
+            background: #fffcf9; /* Nền cực nhạt để phân biệt tiêu đề */
+        }
+
+        .chapter-title span { 
+            margin-right: 12px; 
+            font-size: 1rem;
+        }
+        
+        /* Danh sách bài học */
+        .lesson-list { list-style: none; padding: 0; margin: 0; }
+        .lesson-list li { border-bottom: 1px solid #fff7ed; }
+        .lesson-list li:last-child { border-bottom: none; }
+        
+        .lesson-list li a { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 14px 20px; 
+            color: #475569; 
+            text-decoration: none; 
+            font-size: 0.95rem;
+            transition: 0.2s; 
+        }
+        
+        .lesson-list li a:hover { 
+            background: #fff7ed; 
+            color: var(--accent-orange); 
+            padding-left: 25px; 
+        }
+        
+        .lesson-list li a::after { 
+            content: '➜'; 
+            font-size: 0.8rem;
+            opacity: 0.3;
+        }
+
+        /* Footer tinh gọn, không màu nền */
+        footer { 
+            text-align: center; 
+            padding: 30px 20px; 
+            border-top: 1px solid var(--border-light);
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        footer strong { color: var(--accent-orange); }
+        .footer-info { margin-top: 5px; }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.5rem; }
+            .container { margin-top: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>📚 HỆ THỐNG ÔN TẬP TOÁN 7 </h1>
+    <p>Học tập miễn phí cho học sinh vùng khó khăn</p>
+    
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-input" placeholder="Tìm tên bài học..." onkeyup="searchLesson()">
+    </div>
+</header>
+
+<div class="container" id="lessonContainer">
+
+    <!-- Chương 1 -->
+    <div class="chapter">
+        <h2 class="chapter-title"><span>01</span> Chương 1. Số hữu tỉ</h2>
+        <ul class="lesson-list">
+            <li><a href="bai-1.html">Bài 1. Tập hợp các số hữu tỉ</a></li>
+            <li><a href="bai-2.html">Bài 2. Cộng, trừ, nhân, chia số hữu tỉ</a></li>
+            <li><a href="bai-3.html">Bài 3. Lũy thừa của một số hữu tỉ</a></li>
+            <li><a href="bai-4.html">Bài 4. Quy tắc chuyển vế</a></li>
+        </ul>
+    </div>
+
+    <!-- Chương 2 -->
+    <div class="chapter">
+        <h2 class="chapter-title"><span>02</span> Chương 2. Số thực</h2>
+        <ul class="lesson-list">
+            <li><a href="bai-5.html">Bài 5. Số thập phân vô hạn tuần hoàn</a></li>
+            <li><a href="bai-6.html">Bài 6. Số vô tỉ. Căn bậc hai số học</a></li>
+            <li><a href="bai-7.html">Bài 7. Tập hợp các số thực</a></li>
+        </ul>
+    </div>
+
+    <!-- Chương 3 -->
+    <div class="chapter">
+        <h2 class="chapter-title"><span>03</span> Chương 3. Góc & Đường thẳng song song</h2>
+        <ul class="lesson-list">
+            <li><a href="bai-8.html">Bài 8. Góc đặc biệt. Tia phân giác</a></li>
+            <li><a href="bai-9.html">Bài 9. Hai đường thẳng song song</a></li>
+            <li><a href="bai-10.html">Bài 10. Tiên đề Euclid</a></li>
+            <li><a href="bai-11.html">Bài 11. Định lí và chứng minh</a></li>
+        </ul>
+    </div>
+
+    <!-- Chương 4 -->
+    <div class="chapter">
+        <h2 class="chapter-title"><span>04</span> Chương 4. Tam giác bằng nhau</h2>
+        <ul class="lesson-list">
+            <li><a href="bai-12.html">Bài 12. Tổng các góc trong một tam giác</a></li>
+            <li><a href="bai-13.html">Bài 13. Trường hợp bằng nhau c.c.c</a></li>
+            <li><a href="bai-14.html">Bài 14. Trường hợp c.g.c và g.c.g</a></li>
+            <li><a href="bai-15.html">Bài 15. Tam giác vuông</a></li>
+            <li><a href="bai-16.html">Bài 16. Tam giác cân. Đường trung trực</a></li>
+        </ul>
+    </div>
+
+    <!-- Chương 5 -->
+    <div class="chapter">
+        <h2 class="chapter-title"><span>05</span> Chương 5. Dữ liệu & Biểu đồ</h2>
+        <ul class="lesson-list">
+            <li><a href="bai-17.html">Bài 17. Thu thập và phân loại dữ liệu</a></li>
+            <li><a href="bai-18.html">Bài 18. Biểu đồ hình quạt tròn</a></li>
+            <li><a href="bai-19.html">Bài 19. Biểu đồ đoạn thẳng</a></li>
+        </ul>
+    </div>
+
+</div>
+
+<footer>
+    <div>Dự án giáo dục vì cộng đồng</div>
+    <div class="footer-info">
+     <strong>Tri thức là sức mạnh</strong> 🔥
+    </div>
+</footer>
+
+<script>
+    function searchLesson() {
+        let input = document.getElementById('searchInput').value.toLowerCase();
+        let chapters = document.getElementsByClassName('chapter');
+        
+        for (let i = 0; i < chapters.length; i++) {
+            let lessons = chapters[i].getElementsByTagName('li');
+            let hasMatch = false;
+            
+            for (let j = 0; j < lessons.length; j++) {
+                let text = lessons[j].innerText.toLowerCase();
+                if (text.includes(input)) {
+                    lessons[j].style.display = "";
+                    hasMatch = true;
+                } else {
+                    lessons[j].style.display = "none";
+                }
+            }
+            chapters[i].style.display = hasMatch ? "" : "none";
+        }
+    }
+</script>
+
+</body>
+</html>
