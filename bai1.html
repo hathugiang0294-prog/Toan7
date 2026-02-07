@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Bài Học - Toán 7</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --accent-orange: #f97316;
+            --bg: #fffcf9;
+            --text: #334155;
+        }
+        body { 
+            font-family: 'Comfortaa', cursive; 
+            margin: 0; 
+            background: var(--bg); 
+            color: var(--text);
+            padding-bottom: 50px;
+        }
+        header {
+            background: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--accent-orange);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .back-link {
+            position: absolute;
+            left: 20px;
+            top: 25px;
+            text-decoration: none;
+            color: var(--accent-orange);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+        .lesson-card {
+            background: white;
+            border-radius: 20px;
+            border: 2px solid var(--accent-orange);
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+        .card-header {
+            background: #fff7ed;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #ffedd5;
+            color: var(--accent-orange);
+            font-weight: 700;
+        }
+        .card-header span {
+            font-size: 1.5rem;
+            margin-right: 15px;
+        }
+        .card-content {
+            padding: 20px;
+            min-height: 50px;
+        }
+        .gift-box {
+            text-align: center;
+            padding: 40px 20px;
+            cursor: pointer;
+        }
+        .gift-box:hover .gift-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+        .gift-icon {
+            font-size: 4rem;
+            transition: transform 0.3s;
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html" class="back-link">❮ Trở về</a>
+    <h2 id="lessonTitle" style="margin:0; font-size: 1.2rem; color: var(--accent-orange);">Đang tải bài học...</h2>
+</header>
+
+<div class="container">
+    <!-- 1. VIDEO -->
+    <div class="lesson-card">
+        <div class="card-header">
+            <span>🎬</span> 1. Video bài giảng
+        </div>
+        <div class="card-content">
+            <p style="color:#94a3b8; text-align:center;">[Khu vực hiển thị video bài giảng]</p>
+        </div>
+    </div>
+
+    <!-- 2. HỘP KIẾN THỨC -->
+    <div class="lesson-card">
+        <div class="card-header">
+            <span>💡</span> 2. Hộp kiến thức
+        </div>
+        <div class="card-content">
+            <p>Tóm tắt các công thức và định nghĩa quan trọng của bài học...</p>
+        </div>
+    </div>
+
+    <!-- 3. KHỞI ĐỘNG -->
+    <div class="lesson-card">
+        <div class="card-header">
+            <span>🚀</span> 3. Khởi động
+        </div>
+        <div class="card-content">
+            <p>Các câu hỏi trắc nghiệm nhanh hoặc bài tập tình huống mở đầu...</p>
+        </div>
+    </div>
+
+    <!-- 4. LUYỆN TẬP -->
+    <div class="lesson-card">
+        <div class="card-header">
+            <span>✍️</span> 4. Luyện tập
+        </div>
+        <div class="card-content">
+            <p>Hệ thống bài tập tự luyện từ cơ bản đến nâng cao...</p>
+        </div>
+    </div>
+
+    <!-- 5. HỘP QUÀ MAY MẮN -->
+    <div class="lesson-card" style="border-style: dashed; background: #fffcf9;">
+        <div class="card-header" style="background: #ffedd5;">
+            <span>🎁</span> 5. Hộp quà may mắn
+        </div>
+        <div class="gift-box" onclick="moQua()">
+            <span class="gift-icon">🎁</span>
+            <p>Nhấn vào hộp quà để nhận phần thưởng tinh thần!</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Lấy thông tin bài học từ URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const tenBai = urlParams.get('ten');
+    if (tenBai) {
+        document.getElementById('lessonTitle').innerText = "Bài Học: " + decodeURIComponent(tenBai);
+    }
+
+    function moQua() {
+        const loiChuc = [
+            "Chúc mừng em! Em đã hoàn thành bài học xuất sắc. 🌟",
+            "Đừng bao giờ từ bỏ, tri thức là chìa khóa thành công! 🔑",
+            "Em là một học sinh rất chăm chỉ. Cố gắng lên nhé! 🔥",
+            "Mỗi bài học là một bước chân đưa em đến gần ước mơ. 🌈"
+        ];
+        const ngauNhien = loiChuc[Math.floor(Math.random() * loiChuc.length)];
+        alert(ngauNhien);
+    }
+</script>
+
+</body>
+</html>
