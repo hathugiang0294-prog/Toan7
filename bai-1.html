@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bài 1: Tập hợp các số hữu tỉ - Kết nối tri thức</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        window.MathJax = {
+            tex: { 
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        body { font-family: 'Comfortaa', cursive; scroll-behavior: smooth; }
+        .mjx-container { max-width: 100% !important; overflow-x: auto !important; }
+        
+        .section-dashed {
+            border: 3px dashed #cbd5e1;
+            border-radius: 24px;
+            transition: border-color 0.3s;
+        }
+        .section-dashed:hover { border-color: #3b82f6; }
+
+        .check-btn { transition: all 0.2s; cursor: pointer; -webkit-tap-highlight-color: transparent; border: 2px solid #e2e8f0; }
+        .selected-true { background-color: #22c55e !important; color: white !important; border-color: #16a34a !important; }
+        .selected-false { background-color: #ef4444 !important; color: white !important; border-color: #dc2626 !important; }
+        .correct-highlight { border: 3px solid #22c55e !important; box-shadow: 0 0 8px rgba(34, 197, 94, 0.4); }
+        
+        .mcq-option { border: 2px solid #e2e8f0; cursor: pointer; transition: all 0.2s; border-radius: 16px; }
+        .mcq-option.selected { border-color: #3b82f6; background-color: #eff6ff; }
+        .mcq-option.correct { border-color: #22c55e; background-color: #dcfce7; color: #166534; }
+        .mcq-option.wrong { border-color: #ef4444; background-color: #fee2e2; color: #991b1b; }
+        
+        .fill-input { border-bottom: 2px dashed #3b82f6; outline: none; text-align: center; width: 120px; font-weight: bold; color: #2563eb; background: transparent; }
+        .fill-correct { background-color: #dcfce7; border-color: #22c55e; border-style: solid; }
+        .fill-wrong { background-color: #fee2e2; border-color: #ef4444; border-style: solid; }
+        
+        .feedback-box { display: none; margin-top: 0.5rem; padding: 0.75rem; border-radius: 0.75rem; border-left: 4px solid #ef4444; background-color: #fffafb; font-size: 0.85rem; line-height: 1.4; }
+        .is-submitted .feedback-box { display: block; }
+
+        .btn-download { background-color: #4f46e5; color: white; padding: 6px 12px; border-radius: 99px; font-size: 0.75rem; font-weight: bold; display: flex; items-center gap: 1; transition: opacity 0.2s; }
+        .btn-download:hover { opacity: 0.9; }
+
+        #loading-overlay { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 100; flex-direction: column; align-items: center; justify-content: center; }
+        .loader { border: 6px solid #f3f3f3; border-top: 6px solid #3b82f6; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Animation cho khởi động */
+        .warmup-container { transition: all 0.5s ease; }
+        .warmup-hidden { opacity: 0.3; pointer-events: none; filter: blur(2px); }
+        .gift-box { cursor: pointer; animation: bounce 2s infinite; }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-10px);} 60% {transform: translateY(-5px);} }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen p-3 md:p-6 pb-24 text-slate-800">
+
+    <div id="loading-overlay">
+        <div class="loader mb-4"></div>
+        <p class="font-bold text-blue-600 animate-pulse">AI Đang soạn bộ đề mới cho bạn...</p>
+    </div>
+
+    <div class="max-w-4xl mx-auto space-y-12">
+        
+        <!-- TIÊU ĐỀ CHÍNH -->
+        <div class="text-center py-6">
+            <h1 class="text-3xl md:text-4xl font-black text-blue-600 uppercase tracking-tighter flex items-center justify-center gap-3">
+                <span class="edu-icon">📐</span> Bài 1: Tập hợp các số hữu tỉ <span class="edu-icon">✏️</span>
+            </h1>
+            <p class="text-slate-500 font-bold mt-2">Sách Kết nối tri thức với cuộc sống - Toán 7</p>
+        </div>
+
+        <!-- HỘP KIẾN THỨC -->
+        <div id="capture-knowledge" class="bg-white p-6 section-dashed shadow-sm relative">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                <h2 class="text-xl font-bold text-blue-800 flex items-center gap-2">
+                    <span class="p-2 bg-blue-100 rounded-lg text-blue-600">📖</span>
+                    Kiến Thức Trọng Tâm (Bài 1)
+                </h2>
+                <button onclick="downloadAsImage('capture-knowledge', 'Kien_Thuc_Bai_1')" class="btn-download">
+                    <span>🖼️</span> Tải Ảnh Kiến Thức
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div class="bg-blue-50/50 p-5 rounded-2xl border border-blue-100 space-y-3 shadow-inner">
+                    <h3 class="font-bold text-blue-700">1. Khái niệm số hữu tỉ</h3>
+                    <ul class="space-y-2 text-slate-600">
+                        <li>• Số viết được dưới dạng $\frac{a}{b}$ ($a, b \in \mathbb{Z}, b \neq 0$).</li>
+                        <li>• Tập hợp ký hiệu là $\mathbb{Q}$.</li>
+                    </ul>
+                </div>
+                <div class="bg-green-50/50 p-5 rounded-2xl border border-green-100 space-y-3 shadow-inner">
+                    <h3 class="font-bold text-green-700">2. Thứ tự và Trục số</h3>
+                    <ul class="space-y-2 text-slate-600">
+                        <li>• Mọi số hữu tỉ đều có điểm biểu diễn trên trục số.</li>
+                        <li>• Số đối của $a$ là $-a$. Tổng hai số đối bằng 0.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHẦN KHỞI ĐỘNG MỚI: NHIỆM VỤ PHÁ BĂNG -->
+        <div id="warmup-section" class="bg-white p-8 section-dashed border-blue-200 shadow-md relative overflow-hidden">
+            <div id="warmup-task">
+                <h2 class="text-2xl font-black text-blue-600 flex items-center gap-3 mb-4">
+                    <span class="text-3xl">🧊</span> NHIỆM VỤ PHÁ BĂNG
+                </h2>
+                <p class="text-slate-600 mb-6 font-medium">Giải mã câu đố sau để mở khóa <strong>Hộp Quà May Mắn</strong> trước khi vào bài học:</p>
+                
+                <div class="bg-blue-50 p-6 rounded-3xl border-2 border-blue-100 mb-6">
+                    <p class="text-lg font-bold text-blue-800 text-center">
+                        "Tôi là một số hữu tỉ. Tôi không dương, cũng không âm. <br>Đố bạn tôi là số mấy?"
+                    </p>
+                    <div class="mt-6 flex flex-col items-center gap-4">
+                        <input type="text" id="warmup-input" placeholder="Nhập số..." class="w-32 p-3 text-center text-2xl font-bold rounded-2xl border-2 border-blue-300 focus:border-blue-500 outline-none transition-all">
+                        <button onclick="unlockGift()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-2xl transition-all shadow-lg active:scale-95">
+                            GIẢI MÃ 🚀
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hộp quà ẩn -->
+            <div id="gift-section" class="hidden flex flex-col items-center text-center animate-bounce-in">
+                <div class="text-7xl mb-4 gift-box" onclick="openGift()">🎁</div>
+                <h3 class="text-xl font-bold text-orange-600">BẠN ĐÃ MỞ KHÓA THÀNH CÔNG!</h3>
+                <p class="text-slate-500 text-sm">Nhấn vào hộp quà để nhận phần thưởng...</p>
+            </div>
+
+            <!-- Nội dung quà tặng -->
+            <div id="reward-content" class="hidden text-center space-y-4 py-4">
+                <div class="text-5xl">✨⭐🍀</div>
+                <h3 class="text-2xl font-black text-green-600 uppercase">Chúc mừng Sứ Giả Toán Học!</h3>
+                <p class="text-slate-700 italic">"Kiến thức là kho báu, nhưng thực hành chính là chìa khóa để mở kho báu đó."</p>
+                <div class="flex justify-center gap-2">
+                    <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-bold border border-yellow-200">Huy hiệu Tinh Anh 🏅</span>
+                    <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold border border-green-200">+100 Năng lượng ⚡</span>
+                </div>
+                <p class="text-blue-600 font-bold animate-pulse mt-4">Sẵn sàng chinh phục các thử thách bên dưới nhé! 👇</p>
+            </div>
+        </div>
+
+        <!-- PHẦN 1: MCQ -->
+        <div id="capture-mcq" class="bg-white p-6 section-dashed shadow-sm">
+            <div class="flex justify-between items-center mb-8 border-l-4 border-blue-600 pl-3">
+                <h2 class="text-xl font-bold text-blue-800 uppercase">📝 PHẦN 1: Trắc nghiệm (15 câu)</h2>
+                <button onclick="downloadAsImage('capture-mcq', 'De_Trac_Nghiem_Bai_1')" class="btn-download">
+                    <span>🖼️</span> Tải Ảnh Đề
+                </button>
+            </div>
+            <div id="mcq-container" class="space-y-8"></div>
+        </div>
+
+        <!-- PHẦN 2: T/F -->
+        <div id="capture-tf" class="bg-white p-6 section-dashed shadow-sm">
+            <div class="flex justify-between items-center mb-8 border-l-4 border-blue-600 pl-3">
+                <h2 class="text-xl font-bold text-blue-800 uppercase">✔️ PHẦN 2: Đúng/Sai (5 câu)</h2>
+                <button onclick="downloadAsImage('capture-tf', 'De_Dung_Sai_Bai_1')" class="btn-download">
+                    <span>🖼️</span> Tải Ảnh Đề
+                </button>
+            </div>
+            <div id="tf-container" class="space-y-10"></div>
+        </div>
+
+        <!-- PHẦN 3: FILL -->
+        <div id="capture-fill" class="bg-white p-6 section-dashed shadow-sm">
+            <div class="flex justify-between items-center mb-8 border-l-4 border-blue-600 pl-3">
+                <h2 class="text-xl font-bold text-blue-800 uppercase">🖋️ PHẦN 3: Trả lời ngắn (5 câu)</h2>
+                <button onclick="downloadAsImage('capture-fill', 'De_Tra_Loi_Ngan_Bai_1')" class="btn-download">
+                    <span>🖼️</span> Tải Ảnh Đề
+                </button>
+            </div>
+            <div id="fill-container" class="space-y-6"></div>
+        </div>
+
+        <!-- NỘP BÀI -->
+        <div class="text-center py-12">
+            <button id="submit-btn" onclick="checkResults()" class="bg-blue-600 hover:bg-blue-700 text-white font-black py-5 px-16 rounded-full shadow-2xl transition-all active:scale-95 text-xl tracking-widest flex items-center gap-4 mx-auto">
+                <span>📤</span> NỘP BÀI KIỂM TRA
+            </button>
+            
+            <div id="result-board" class="mt-8 hidden">
+                <div class="bg-white section-dashed p-8 inline-block shadow-xl w-full max-w-2xl">
+                    <div id="score-text" class="text-4xl font-black text-blue-700 mb-2"></div>
+                    
+                    <div class="mt-8 pt-6 border-t border-slate-100">
+                        <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center justify-center gap-2">
+                            🚀 TIỆN ÍCH NÂNG CAO CHO BẠN
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <button onclick="location.reload()" class="flex flex-col items-center justify-center p-4 bg-slate-50 hover:bg-slate-100 border-2 border-slate-200 rounded-2xl transition-all group">
+                                <span class="text-2xl mb-1 group-hover:rotate-12 transition-transform">🔄</span>
+                                <span class="font-bold text-slate-700">Làm lại đề này</span>
+                                <span class="text-xs text-slate-500">Xóa kết quả và làm lại từ đầu</span>
+                            </button>
+                            <button onclick="generateNewLevel('similar')" class="flex flex-col items-center justify-center p-4 bg-blue-50 hover:bg-blue-100 border-2 border-blue-200 rounded-2xl transition-all group">
+                                <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">🎭</span>
+                                <span class="font-bold text-blue-700">Đề tương tự</span>
+                                <span class="text-xs text-blue-500">Câu hỏi mới, độ khó giữ nguyên</span>
+                            </button>
+                            <button onclick="generateNewLevel('advanced')" class="flex flex-col items-center justify-center p-4 bg-purple-50 hover:bg-purple-100 border-2 border-purple-200 rounded-2xl transition-all group">
+                                <span class="text-2xl mb-1 group-hover:-translate-y-1 transition-transform">🔥</span>
+                                <span class="font-bold text-purple-700">Thử thách Nâng cao</span>
+                                <span class="text-xs text-purple-500">Câu hỏi khó hơn, tư duy sâu hơn</span>
+                            </button>
+                            <button onclick="downloadTextOffline()" class="flex flex-col items-center justify-center p-4 bg-indigo-50 hover:bg-indigo-100 border-2 border-indigo-200 rounded-2xl transition-all group">
+                                <span class="text-2xl mb-1 group-hover:bounce transition-transform">💾</span>
+                                <span class="font-bold text-indigo-700">Lưu đáp án</span>
+                                <span class="text-xs text-indigo-500">Tải file txt xem offline</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const apiKey = ""; 
+
+        const ORIGINAL_MCQ = [
+            { l: "nb", q: "Tập hợp các số hữu tỉ được ký hiệu là:", options: ["$\\mathbb{N}$", "$\\mathbb{Z}$", "$\\mathbb{Q}$", "$\\mathbb{R}$"], correct: 2, exp: "Số hữu tỉ ký hiệu là $\\mathbb{Q}$." },
+            { l: "nb", q: "Số đối của số $-\\frac{5}{6}$ là:", options: ["$\\frac{5}{6}$", "$\\frac{6}{5}$", "$-\\frac{6}{5}$", "$0$"], correct: 0, exp: "Số đối của $-a$ là $a$." },
+            { l: "nb", q: "Số nào sau đây là số hữu tỉ dương?", options: ["$-2$", "$0$", "$\\frac{-1}{-3}$", "$\\frac{2}{-5}$"], correct: 2, exp: "$\\frac{-1}{-3} = \\frac{1}{3} > 0$." },
+            { l: "nb", q: "Mọi số nguyên $a$ đều có thể viết dưới dạng:", options: ["$\\frac{a}{1}$", "$\\frac{1}{a}$", "$\\frac{a}{a}$", "$\\frac{0}{a}$"], correct: 0, exp: "$a = a/1$." },
+            { l: "nb", q: "Khẳng định nào sau đây là ĐÚNG?", options: ["$\\mathbb{Q} \\subset \\mathbb{Z}$", "$\\mathbb{Z} \\subset \\mathbb{Q}$", "$\\mathbb{Q} \\subset \\mathbb{N}$", "$\\mathbb{N} \\subset \\mathbb{Z}$ là sai"], correct: 1, exp: "Số nguyên là con số hữu tỉ." },
+            { l: "nb", q: "Số thập phân $0,25$ viết dưới dạng phân số tối giản là:", options: ["$\\frac{25}{100}$", "$\\frac{1}{4}$", "$\\frac{2}{5}$", "$\\frac{1}{2}$"], correct: 1, exp: "$0,25 = 1/4$." },
+            { l: "th", q: "Số hữu tỉ nào sau đây nằm bên trái điểm $0$ trên trục số?", options: ["$1,5$", "$\\frac{3}{4}$", "$-\\frac{2}{3}$", "$2$"], correct: 2, exp: "Số hữu tỉ âm nằm bên trái điểm 0." },
+            { l: "th", q: "Kết quả so sánh hai số $-0,5$ và $\\frac{1}{4}$ là:", options: ["$-0,5 > \\frac{1}{4}$", "$-0,5 < \\frac{1}{4}$", "$-0,5 = \\frac{1}{4}$", "Không so sánh"], correct: 1, exp: "Số âm luôn nhỏ hơn số dương." },
+            { l: "th", q: "Số đối của hỗn số $1\\frac{1}{2}$ là:", options: ["$-1,5$", "$\\frac{3}{2}$", "$-1\\frac{2}{1}$", "$1,5$"], correct: 0, exp: "$1,5$ có số đối là $-1,5$." },
+            { l: "th", q: "Điểm $M$ trên trục số biểu diễn số $\\frac{3}{4}$. Khoảng cách từ $M$ đến gốc $O$ là:", options: ["$3$ đơn vị", "$4$ đơn vị", "$\\frac{3}{4}$ đơn vị", "$0,34$ đơn vị"], correct: 2, exp: "Khoảng cách là trị tuyệt đối." },
+            { l: "th", q: "Sắp xếp tăng dần: $0; -1; \\frac{1}{2}$ là:", options: ["$0; -1; \\frac{1}{2}$", "$-1; 0; \\frac{1}{2}$", "$\\frac{1}{2}; 0; -1$", "$-1; \\frac{1}{2}; 0$"], correct: 1, exp: "$-1 < 0 < 0,5$." },
+            { l: "vd", q: "Số hữu tỉ $x$ nằm giữa $-1$ và $0$ là:", options: ["$\\frac{1}{2}$", "$-\\frac{3}{2}$", "$-\\frac{1}{4}$", "$-1,2$"], correct: 2, exp: "$-1 < -0,25 < 0$." },
+            { l: "vd", q: "Trên trục số, điểm biểu diễn $-2/3$ và $2/3$ có đặc điểm:", options: ["Cùng phía O", "Cùng bên phải", "Đối xứng qua O", "Trùng nhau"], correct: 2, exp: "Hai số đối nhau đối xứng qua gốc O." },
+            { l: "vd", q: "Trong các phân số $\\frac{2}{3}; \\frac{4}{6}; \\frac{-2}{-3}; \\frac{6}{9}$, có bao nhiêu số hữu tỉ khác nhau?", options: ["1", "2", "3", "4"], correct: 0, exp: "Cả 4 phân số đều bằng $2/3$ nên chỉ là 1 số hữu tỉ." },
+            { l: "vd", q: "Cho $x = \\frac{a}{b}$. Nếu $a, b$ cùng dấu thì $x$ là:", options: ["Số hữu tỉ dương", "Số hữu tỉ âm", "Số 0", "Không xác định"], correct: 0, exp: "Cùng dấu thì thương dương." }
+        ];
+
+        const ORIGINAL_TF = [
+            { q: "Câu 1: Về khái niệm số hữu tỉ", items: [
+                { t: "a) Số tự nhiên là số hữu tỉ.", a: true, exp: "$n = n/1$." },
+                { t: "b) Số 0 là số hữu tỉ dương.", a: false, exp: "Số 0 không âm không dương." },
+                { t: "c) $-1,5$ là số hữu tỉ.", a: true, exp: "$-1,5 = -3/2$." },
+                { t: "d) Tập số hữu tỉ ký hiệu là $\\mathbb{Q}$.", a: true, exp: "Đúng." }
+            ]},
+            { q: "Câu 2: Về trục số và số đối", items: [
+                { t: "a) $-2$ nằm bên trái $-3$ trên trục số.", a: false, exp: "$-2 > -3$ nên nằm bên phải." },
+                { t: "b) Gốc $O$ nằm giữa số âm và số dương.", a: true, exp: "Đúng." },
+                { t: "c) Khoảng cách từ gốc $O$ đến điểm biểu diễn số $1$ là $1$.", a: true, exp: "Đúng." },
+                { t: "d) Hai số đối cách đều điểm $O$.", a: true, exp: "Đúng." }
+            ]},
+            { q: "Câu 3: Về so sánh số hữu tỉ", items: [
+                { t: "a) $-0,75 = -\\frac{3}{4}$.", a: true, exp: "Đúng." },
+                { t: "b) $\\frac{1}{2} < \\frac{1}{3}$.", a: false, exp: "Sai, $0,5 > 0,33$." },
+                { t: "c) Số hữu tỉ dương luôn lớn hơn số hữu tỉ âm.", a: true, exp: "Đúng." },
+                { t: "d) Số hữu tỉ âm lớn hơn $0$.", a: false, exp: "Số hữu tỉ âm luôn nhỏ hơn 0." }
+            ]},
+            { q: "Câu 4: Về biểu diễn trên trục số", items: [
+                { t: "a) Mỗi số hữu tỉ chỉ có 1 điểm biểu diễn duy nhất.", a: true, exp: "Mỗi số tương ứng duy nhất 1 điểm." },
+                { t: "b) Điểm $\\frac{1}{2}$ nằm chính giữa $0$ và $1$.", a: true, exp: "Đúng." },
+                { t: "c) Điểm $-1$ cách $O$ một khoảng là $-1$.", a: false, exp: "Khoảng cách phải dương (bằng 1)." },
+                { t: "d) Trục số nằm ngang có chiều dương từ trái sang phải.", a: true, exp: "Quy ước chuẩn." }
+            ]},
+            { q: "Câu 5: Về số đối nâng cao", items: [
+                { t: "a) Số đối của số $0$ là chính nó.", a: true, exp: "$-0 = 0$." },
+                { t: "b) Số đối của số đối của số hữu tỉ $a$ là chính nó.", a: true, exp: "$-(-a) = a$." },
+                { t: "c) Hai số đối nhau luôn có tổng bằng $1$.", a: false, exp: "Tổng luôn bằng 0." },
+                { t: "d) Số đối của một số hữu tỉ dương là một số dương.", a: false, exp: "Số đối của số dương là số âm." }
+            ]}
+        ];
+
+        const ORIGINAL_FILL = [
+            { q: "Số đối của số $2,5$ là:", a: "-2,5", exp: "Đổi dấu số hữu tỉ." },
+            { q: "Số hữu tỉ không dương cũng không âm là số:", a: "0", exp: "Đó là số 0." },
+            { q: "Viết $-0,6$ dưới dạng phân số tối giản là:", a: "-3/5", exp: "$-6/10 = -3/5$." },
+            { q: "Điểm biểu diễn số $-\\frac{1}{2}$ cách gốc $O$ bao nhiêu đơn vị?", a: "0,5", exp: "Khoảng cách $|-1/2| = 0,5$." },
+            { q: "Tập hợp các số hữu tỉ được ký hiệu bằng chữ cái nào?", a: "Q", exp: "Ký hiệu là Q." }
+        ];
+
+        let currentMcq = [...ORIGINAL_MCQ];
+        let currentTf = [...ORIGINAL_TF];
+        let currentFill = [...ORIGINAL_FILL];
+
+        let userMcq = Array(15).fill(null);
+        let userTf = Array(5).fill(null).map(() => Array(4).fill(null));
+        let isSubmitted = false;
+
+        function init() {
+            renderAll();
+        }
+
+        // --- HÀM CHO PHẦN KHỞI ĐỘNG MỚI ---
+        function unlockGift() {
+            const input = document.getElementById('warmup-input').value.trim();
+            if(input === "0") {
+                document.getElementById('warmup-task').classList.add('hidden');
+                document.getElementById('gift-section').classList.remove('hidden');
+                confetti({ particleCount: 50, spread: 60, origin: { y: 0.3 } });
+            } else {
+                alert("Gần đúng rồi, hãy thử lại nhé! Gợi ý: Số này nằm giữa -1 và 1.");
+            }
+        }
+
+        function openGift() {
+            document.getElementById('gift-section').classList.add('hidden');
+            document.getElementById('reward-content').classList.remove('hidden');
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.3 }, colors: ['#FFD700', '#FFA500'] });
+        }
+        // ----------------------------------
+
+        function renderAll() {
+            const mcqBox = document.getElementById('mcq-container');
+            mcqBox.innerHTML = "";
+            currentMcq.forEach((d, i) => {
+                let opts = d.options.map((o, j) => `<div onclick="setMcq(${i},${j})" id="mcq-${i}-${j}" class="mcq-option p-4 bg-white shadow-sm flex items-center mb-2"><span class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 mr-3 font-bold text-xs">${String.fromCharCode(65+j)}</span> ${o}</div>`).join('');
+                mcqBox.innerHTML += `<div class="p-5 border-b" id="mcq-card-${i}"><div class="flex justify-between mb-2"><span class="font-bold text-blue-600">CÂU ${i+1}</span></div><p class="mb-4 text-slate-700 font-medium">${d.q}</p><div class="grid grid-cols-1 md:grid-cols-2 gap-3">${opts}</div><div id="mcq-fb-${i}" class="feedback-box"></div></div>`;
+            });
+
+            const tfBox = document.getElementById('tf-container');
+            tfBox.innerHTML = "";
+            currentTf.forEach((d, i) => {
+                let rows = d.items.map((item, j) => `<tr class="border-b"><td class="py-4 px-4 text-sm font-medium">${item.t}<div id="tf-fb-${i}-${j}" class="feedback-box"></div></td><td class="p-2 text-center"><button onclick="setTf(${i},${j},true)" id="tf-btn-${i}-${j}-t" class="check-btn w-10 h-10 rounded-xl border">Đ</button></td><td class="p-2 text-center"><button onclick="setTf(${i},${j},false)" id="tf-btn-${i}-${j}-s" class="check-btn w-10 h-10 rounded-xl border">S</button></td></tr>`).join('');
+                tfBox.innerHTML += `<div class="bg-slate-50 rounded-2xl border overflow-hidden mb-8"><div class="bg-white p-4 font-bold text-blue-800 border-b">${d.q}</div><table class="w-full"><tbody>${rows}</tbody></table></div>`;
+            });
+
+            const fBox = document.getElementById('fill-container');
+            fBox.innerHTML = "";
+            currentFill.forEach((d, i) => {
+                fBox.innerHTML += `<div class="bg-slate-50 p-5 rounded-2xl border space-y-2"><div class="flex items-center justify-between gap-4"><span><strong>Câu ${i+1}.</strong> ${d.q}</span><input type="text" id="fill-${i}" class="fill-input"></div><div id="fill-fb-${i}" class="feedback-box"></div></div>`;
+            });
+            
+            userMcq = Array(currentMcq.length).fill(null);
+            userTf = Array(currentTf.length).fill(null).map(() => Array(4).fill(null));
+            isSubmitted = false;
+            document.getElementById('submit-btn').classList.remove('hidden');
+            document.getElementById('result-board').classList.add('hidden');
+            
+            if(window.MathJax) MathJax.typeset();
+        }
+
+        async function downloadAsImage(elementId, fileName) {
+            const element = document.getElementById(elementId);
+            const canvas = await html2canvas(element, { 
+                scale: 2,
+                backgroundColor: "#ffffff",
+                logging: false,
+                useCORS: true 
+            });
+            const link = document.createElement('a');
+            link.download = fileName + '.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        function setMcq(q, o) { 
+            if(!isSubmitted) { 
+                userMcq[q] = o; 
+                document.getElementById(`mcq-card-${q}`).querySelectorAll('.mcq-option').forEach(opt => opt.classList.remove('selected')); 
+                document.getElementById(`mcq-${q}-${o}`).classList.add('selected'); 
+            } 
+        }
+
+        function setTf(q, i, v) { 
+            if(!isSubmitted) { 
+                userTf[q][i] = v; 
+                document.getElementById(`tf-btn-${q}-${i}-t`).classList.remove('selected-true'); 
+                document.getElementById(`tf-btn-${q}-${i}-s`).classList.remove('selected-false'); 
+                if(v) document.getElementById(`tf-btn-${q}-${i}-t`).classList.add('selected-true'); 
+                else document.getElementById(`tf-btn-${q}-${i}-s`).classList.add('selected-false'); 
+            } 
+        }
+
+        function checkResults() {
+            isSubmitted = true;
+            let correct = 0;
+            let total = currentMcq.length + (currentTf.length * 4) + currentFill.length;
+
+            currentMcq.forEach((d, i) => {
+                const fb = document.getElementById(`mcq-fb-${i}`);
+                const opts = document.getElementById(`mcq-card-${i}`).querySelectorAll('.mcq-option');
+                opts[d.correct].classList.add('correct');
+                if(userMcq[i] === d.correct) { correct++; fb.innerHTML = "✔️ " + d.exp; fb.className = "feedback-box block text-green-700 bg-green-50"; }
+                else { if(userMcq[i] !== null) opts[userMcq[i]].classList.add('wrong'); fb.innerHTML = "❌ " + d.exp; fb.className = "feedback-box block text-red-700 bg-red-50"; }
+            });
+
+            currentTf.forEach((d, i) => { d.items.forEach((item, j) => {
+                const fb = document.getElementById(`tf-fb-${i}-${j}`);
+                if(userTf[i][j] === item.a) { correct++; fb.innerHTML = "✔️ " + item.exp; fb.className = "feedback-box block text-green-700 bg-green-50"; }
+                else { fb.innerHTML = "❌ " + item.exp; fb.className = "feedback-box block text-red-700 bg-red-50"; }
+                if(item.a) document.getElementById(`tf-btn-${i}-${j}-t`).classList.add('correct-highlight'); else document.getElementById(`tf-btn-${i}-${j}-s`).classList.add('correct-highlight');
+            });});
+
+            currentFill.forEach((d, i) => {
+                const input = document.getElementById(`fill-${i}`);
+                const fb = document.getElementById(`fill-fb-${i}`);
+                if(input.value.trim().toLowerCase() === d.a.toLowerCase()) { correct++; input.classList.add('fill-correct'); fb.innerHTML = "✔️ " + d.exp; fb.className = "feedback-box block text-green-700 bg-green-50"; }
+                else { input.classList.add('fill-wrong'); fb.innerHTML = "❌ Đáp án: " + d.a; fb.className = "feedback-box block text-red-700 bg-red-50"; }
+            });
+
+            document.getElementById('submit-btn').classList.add('hidden');
+            document.getElementById('result-board').classList.remove('hidden');
+            document.getElementById('score-text').innerText = `KẾT QUẢ: ${((correct/total)*10).toFixed(1)}/10`;
+            confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+            if(window.MathJax) MathJax.typeset();
+        }
+
+        function generateNewLevel(type) {
+            document.getElementById('loading-overlay').style.display = 'flex';
+            setTimeout(() => {
+                if(type === 'similar') {
+                    currentMcq = [...ORIGINAL_MCQ].sort(() => Math.random() - 0.5);
+                    currentFill = ORIGINAL_FILL.map(item => ({...item, q: item.q.replace("2,5", "3,5").replace("-0,6", "-0,8"), a: item.a.replace("-2,5", "-3,5").replace("-3/5", "-4/5")}));
+                } else if(type === 'advanced') {
+                    currentMcq = [
+                        { l: "v dc", q: "Tìm x biết $|x - 1,5| = 2$ và $x < 0$:", options: ["$3,5$", "$-0,5$", "$0,5$", "$-3,5$"], correct: 1, exp: "Giải pt trị tuyệt đối, chọn nghiệm âm." },
+                        ...ORIGINAL_MCQ.slice(5) 
+                    ];
+                    currentFill = [
+                        { q: "Số hữu tỉ nhỏ nhất trong các số: $0; -1/2; -3/4; -0,1$ là:", a: "-3/4", exp: "So sánh các số hữu tỉ âm." },
+                        ...ORIGINAL_FILL.slice(1)
+                    ];
+                }
+                document.getElementById('loading-overlay').style.display = 'none';
+                renderAll();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 1500);
+        }
+
+        function downloadTextOffline() {
+            let txt = "=== ĐÁP ÁN CHI TIẾT BÀI 1: SỐ HỮU TỈ ===\n\n1. TRẮC NGHIỆM:\n";
+            currentMcq.forEach((d,i) => txt += `Câu ${i+1}: ${String.fromCharCode(65+d.correct)} (${d.exp})\n`);
+            txt += "\n2. ĐÚNG/SAI:\n";
+            currentTf.forEach(d => { txt += d.q + "\n"; d.items.forEach(it => txt += `- ${it.t}: ${it.a ? 'Đúng' : 'Sai'} (${it.exp})\n`); });
+            txt += "\n3. TRẢ LỜI NGẮN:\n";
+            currentFill.forEach((d,i) => txt += `Câu ${i+1}: ${d.a} (${d.exp})\n`);
+            
+            const blob = new Blob([txt], {type: 'text/plain'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "Dap_An_Bai_1_Toan_7.txt";
+            a.click();
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
