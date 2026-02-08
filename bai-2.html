@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 2: Cộng, trừ, nhân, chia số hữu tỉ - Mobile Friendly</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        window.MathJax = {
+            tex: { 
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            chtml: {
+                scale: 1,
+                matchFontHeight: false,
+                mtextInheritFont: true
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        body { font-family: 'Comfortaa', cursive !important; scroll-behavior: smooth; line-height: 1.8; }
+        * { font-family: 'Comfortaa', cursive !important; }
+        
+        mjx-container {
+            display: inline-block !important;
+            vertical-align: baseline !important;
+            margin: 0 0.1em !important;
+        }
+        
+        nav {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .section-dashed {
+            border: 3px dashed #cbd5e1;
+            border-radius: 24px;
+            transition: border-color 0.3s;
+        }
+        .section-dashed:hover { border-color: #3b82f6; }
+
+        .check-btn { transition: all 0.2s; cursor: pointer; border: 2px solid #e2e8f0; }
+        .selected-true { background-color: #22c55e !important; color: white !important; border-color: #16a34a !important; }
+        .selected-false { background-color: #ef4444 !important; color: white !important; border-color: #dc2626 !important; }
+        .correct-highlight { border: 3px solid #22c55e !important; box-shadow: 0 0 8px rgba(34, 197, 94, 0.4); }
+        
+        .mcq-option { border: 2px solid #e2e8f0; cursor: pointer; transition: all 0.2s; border-radius: 16px; }
+        .mcq-option.selected { border-color: #3b82f6; background-color: #eff6ff; }
+        .mcq-option.correct { border-color: #22c55e; background-color: #dcfce7; color: #166534; }
+        .mcq-option.wrong { border-color: #ef4444; background-color: #fee2e2; color: #991b1b; }
+        
+        .fill-input { border-bottom: 2px dashed #3b82f6; outline: none; text-align: center; width: 120px; font-weight: bold; color: #2563eb; background: transparent; }
+        .fill-correct { background-color: #dcfce7; border-color: #22c55e; border-style: solid; }
+        .fill-wrong { background-color: #fee2e2; border-color: #ef4444; border-style: solid; }
+        
+        .feedback-box { display: none; margin-top: 0.5rem; padding: 0.75rem; border-radius: 0.75rem; border-left: 4px solid #ef4444; background-color: #fffafb; font-size: 0.85rem; }
+
+        .hint-box { 
+            display: none; 
+            margin-top: 0.5rem; 
+            padding: 0.75rem; 
+            border-radius: 0.75rem; 
+            border: 1px dashed #eab308; 
+            background-color: #fefce8; 
+            color: #854d0e; 
+            font-size: 0.85rem;
+        }
+
+        .btn-download { 
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            color: white; 
+            padding: 8px 16px; 
+            border-radius: 12px; 
+            font-size: 0.8rem; 
+            font-weight: bold; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 6px; 
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+        .btn-download:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
+        }
+        .btn-download:active {
+            transform: translateY(0);
+        }
+
+        #loading-overlay { 
+            display: none; 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(255,255,255,0.95); 
+            z-index: 100; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        .loader { 
+            border: 6px solid #f3f3f3; 
+            border-top: 6px solid #3b82f6; 
+            border-radius: 50%; 
+            width: 50px; 
+            height: 50px; 
+            animation: spin 1s linear infinite; 
+        }
+        @keyframes spin { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
+
+        .warmup-input-refined {
+            width: 140px; 
+            padding: 10px; 
+            text-align: center; 
+            font-size: 1rem; 
+            font-weight: 700; 
+            border-radius: 15px; 
+            border: 2px solid #3b82f6; 
+            background: #f0f7ff; 
+            color: #1e40af; 
+            outline: none; 
+            transition: all 0.3s;
+        }
+
+        .hint-btn { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 4px; 
+            background: #fef3c7; 
+            border: 2px solid #f59e0b; 
+            padding: 6px 12px; 
+            border-radius: 12px; 
+            color: #92400e; 
+            font-size: 0.75rem; 
+            font-weight: bold; 
+            transition: all 0.2s;
+            margin-left: 8px;
+            cursor: pointer;
+        }
+        .hint-btn:hover {
+            background: #fde68a;
+            transform: translateY(-1px);
+        }
+
+        @keyframes bounce-in {
+            0% { transform: scale(0.9); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-bounce-in {
+            animation: bounce-in 0.5s ease-out;
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+        .level-nhan-biet {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #3b82f6;
+        }
+        .level-thong-hieu {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #f59e0b;
+        }
+        .level-van-dung {
+            background: #fecaca;
+            color: #991b1b;
+            border: 1px solid #ef4444;
+        }
+
+        .score-excellent {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            animation: pulse-scale 1s ease-in-out infinite;
+        }
+        .score-good {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+        }
+        .score-average {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+        .score-low {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        @keyframes pulse-scale {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* MOBILE DOWNLOAD MODAL */
+        .download-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .download-modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 400px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .download-option {
+            padding: 16px;
+            margin: 12px 0;
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border: 2px solid #3b82f6;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .download-option:active {
+            transform: scale(0.98);
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+        }
+
+        .download-option-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+
+        .download-option-text {
+            flex: 1;
+        }
+
+        .download-option-title {
+            font-weight: bold;
+            color: #1e40af;
+            margin-bottom: 4px;
+        }
+
+        .download-option-desc {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
+        /* CHATBOT STYLES */
+        #chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        #chatbot-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00B2FF 0%, #006AFF 100%);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(0, 106, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            transition: all 0.3s;
+        }
+
+        #chatbot-toggle:active {
+            transform: scale(0.95);
+        }
+
+        #chatbot-window {
+            display: none;
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: calc(100vw - 40px);
+            max-width: 340px;
+            height: 480px;
+            max-height: 60vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #chatbot-header {
+            background: linear-gradient(135deg, #00B2FF 0%, #006AFF 100%);
+            color: white;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #chatbot-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        #chatbot-close:active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        #chatbot-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            background: #f8fafc;
+        }
+
+        .chat-message {
+            margin-bottom: 12px;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chat-message.bot {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-message.user {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            padding: 10px 14px;
+            border-radius: 16px;
+            max-width: 75%;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .chat-message.bot .message-content {
+            background: white;
+            color: #1e293b;
+            border: 1px solid #e2e8f0;
+        }
+
+        .chat-message.user .message-content {
+            background: linear-gradient(135deg, #00B2FF 0%, #006AFF 100%);
+            color: white;
+        }
+
+        .bot-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00B2FF 0%, #006AFF 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        #chatbot-input-area {
+            padding: 12px;
+            border-top: 1px solid #e2e8f0;
+            background: white;
+            display: flex;
+            gap: 8px;
+        }
+
+        #chatbot-input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            outline: none;
+            font-size: 0.9rem;
+            transition: border-color 0.2s;
+        }
+
+        #chatbot-input:focus {
+            border-color: #00B2FF;
+        }
+
+        #chatbot-send {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00B2FF 0%, #006AFF 100%);
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.2s;
+        }
+
+        #chatbot-send:active {
+            transform: scale(0.95);
+        }
+
+        #chatbot-send:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .quick-questions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .quick-question-btn {
+            padding: 6px 12px;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #1e40af;
+        }
+
+        .quick-question-btn:active {
+            background: #dbeafe;
+            transform: scale(0.98);
+        }
+
+        @media (max-width: 640px) {
+            .btn-download {
+                padding: 6px 12px;
+                font-size: 0.7rem;
+            }
+            
+            .download-option {
+                padding: 12px;
+            }
+            
+            .download-option-icon {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen pb-24 text-slate-800">
+
+    <nav class="p-4 shadow-sm mb-6">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2 text-orange-600 font-bold hover:opacity-80 transition-opacity">
+                <span class="text-xl">🏠</span>
+                <span class="hidden sm:inline">Trang chủ</span>
+            </a>
+            <div class="text-xs font-bold text-slate-500 uppercase tracking-widest">Toán 7 - Bài 2 ✨</div>
+        </div>
+    </nav>
+
+    <div id="loading-overlay">
+        <div class="loader mb-4"></div>
+        <p class="font-bold text-blue-600 animate-pulse">Đang xử lý...</p>
+    </div>
+
+    <!-- DOWNLOAD MODAL -->
+    <div id="download-modal" class="download-modal">
+        <div class="download-modal-content">
+            <h3 class="text-xl font-bold text-blue-800 mb-4 text-center">📥 Chọn cách tải</h3>
+            
+            <div id="download-options-container"></div>
+            
+            <button onclick="closeDownloadModal()" class="w-full mt-4 py-3 bg-gray-200 text-gray-700 font-bold rounded-xl">
+                Đóng
+            </button>
+        </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-3 md:px-6 space-y-12">
+        
+        <div class="text-center py-6">
+            <h1 class="text-3xl md:text-4xl font-black text-blue-600 uppercase tracking-tighter flex items-center justify-center gap-3 flex-wrap">
+                <span>➕</span> Bài 2: Cộng, trừ, nhân, chia số hữu tỉ <span>➗</span>
+            </h1>
+            <p class="text-slate-500 font-bold mt-2">Kết nối tri thức - Toán 7</p>
+        </div>
+
+        <!-- KIẾN THỨC -->
+        <div id="capture-knowledge" class="bg-white p-6 section-dashed shadow-sm">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-blue-800">📖 Kiến Thức Trọng Tâm</h2>
+                <button onclick="showDownloadModal('knowledge')" class="btn-download">
+                    <span>📥</span> Tải
+                </button>
+            </div>
+            
+            <div class="space-y-6 text-sm">
+                <!-- CỘNG SỐ HỮU TỈ -->
+                <div class="bg-blue-50/50 p-5 rounded-2xl border border-blue-100 space-y-3">
+                    <h3 class="font-bold text-blue-700 text-base">1. Cộng hai số hữu tỉ</h3>
+                    <div class="space-y-2 text-slate-700">
+                        <p><strong>Quy tắc:</strong> Muốn cộng hai số hữu tỉ, ta viết chúng dưới dạng hai phân số có cùng mẫu dương rồi cộng các tử và giữ nguyên mẫu chung.</p>
+                        <p><strong>Công thức:</strong> Với $a, b, c \in \mathbb{Z}$, $b > 0$:</p>
+                        <p class="ml-4">$\frac{a}{b} + \frac{c}{b} = \frac{a + c}{b}$</p>
+                        <p><strong>Ví dụ:</strong> $\frac{2}{7} + \frac{3}{7} = \frac{2+3}{7} = \frac{5}{7}$</p>
+                        <p class="ml-9">$\frac{1}{2} + \frac{1}{3} = \frac{3}{6} + \frac{2}{6} = \frac{5}{6}$</p>
+                    </div>
+                </div>
+
+                <!-- TRỪ SỐ HỮU TỈ -->
+                <div class="bg-green-50/50 p-5 rounded-2xl border border-green-100 space-y-3">
+                    <h3 class="font-bold text-green-700 text-base">2. Trừ hai số hữu tỉ</h3>
+                    <div class="space-y-2 text-slate-700">
+                        <p><strong>Quy tắc:</strong> Muốn trừ hai số hữu tỉ, ta cộng số bị trừ với số đối của số trừ.</p>
+                        <p><strong>Công thức:</strong> Với $x, y \in \mathbb{Q}$:</p>
+                        <p class="ml-4">$x - y = x + (-y)$</p>
+                        <p><strong>Ví dụ:</strong> $\frac{5}{6} - \frac{1}{2} = \frac{5}{6} + (-\frac{1}{2}) = \frac{5}{6} - \frac{3}{6} = \frac{2}{6} = \frac{1}{3}$</p>
+                    </div>
+                </div>
+
+                <!-- NHÂN SỐ HỮU TỈ -->
+                <div class="bg-purple-50/50 p-5 rounded-2xl border border-purple-100 space-y-3">
+                    <h3 class="font-bold text-purple-700 text-base">3. Nhân hai số hữu tỉ</h3>
+                    <div class="space-y-2 text-slate-700">
+                        <p><strong>Quy tắc:</strong> Muốn nhân hai số hữu tỉ, ta nhân các tử với nhau và nhân các mẫu với nhau.</p>
+                        <p><strong>Công thức:</strong> Với $a, b, c, d \in \mathbb{Z}$, $b, d \neq 0$:</p>
+                        <p class="ml-4">$\frac{a}{b} \cdot \frac{c}{d} = \frac{a \cdot c}{b \cdot d}$</p>
+                        <p><strong>Ví dụ:</strong> $\frac{2}{3} \cdot \frac{5}{7} = \frac{2 \cdot 5}{3 \cdot 7} = \frac{10}{21}$</p>
+                        <p class="ml-9">$\frac{-3}{4} \cdot \frac{2}{5} = \frac{(-3) \cdot 2}{4 \cdot 5} = \frac{-6}{20} = \frac{-3}{10}$</p>
+                    </div>
+                </div>
+
+                <!-- CHIA SỐ HỮU TỈ -->
+                <div class="bg-orange-50/50 p-5 rounded-2xl border border-orange-100 space-y-3">
+                    <h3 class="font-bold text-orange-700 text-base">4. Chia hai số hữu tỉ</h3>
+                    <div class="space-y-2 text-slate-700">
+                        <p><strong>Quy tắc:</strong> Muốn chia một số hữu tỉ cho một số hữu tỉ khác 0, ta nhân số bị chia với số nghịch đảo của số chia.</p>
+                        <p><strong>Công thức:</strong> Với $a, b, c, d \in \mathbb{Z}$, $b, c, d \neq 0$:</p>
+                        <p class="ml-4">$\frac{a}{b} : \frac{c}{d} = \frac{a}{b} \cdot \frac{d}{c} = \frac{a \cdot d}{b \cdot c}$</p>
+                        <p><strong>Ví dụ:</strong> $\frac{3}{4} : \frac{2}{5} = \frac{3}{4} \cdot \frac{5}{2} = \frac{15}{8}$</p>
+                        <p class="ml-9">$(-\frac{5}{6}) : \frac{3}{4} = (-\frac{5}{6}) \cdot \frac{4}{3} = \frac{-20}{18} = \frac{-10}{9}$</p>
+                    </div>
+                </div>
+
+                <!-- TÍNH CHẤT -->
+                <div class="bg-pink-50/50 p-5 rounded-2xl border border-pink-100 space-y-3">
+                    <h3 class="font-bold text-pink-700 text-base">5. Tính chất các phép toán</h3>
+                    <div class="space-y-2 text-slate-700">
+                        <p><strong>• Tính chất giao hoán:</strong></p>
+                        <p class="ml-4">$a + b = b + a$; $\quad a \cdot b = b \cdot a$</p>
+                        <p><strong>• Tính chất kết hợp:</strong></p>
+                        <p class="ml-4">$(a + b) + c = a + (b + c)$</p>
+                        <p class="ml-4">$(a \cdot b) \cdot c = a \cdot (b \cdot c)$</p>
+                        <p><strong>• Tính chất phân phối:</strong></p>
+                        <p class="ml-4">$a \cdot (b + c) = a \cdot b + a \cdot c$</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TRÒ CHƠI MỞ KHÓA -->
+        <div class="bg-white p-8 section-dashed shadow-md">
+            <div id="puzzle-task">
+                <h2 class="text-2xl font-black text-blue-600 flex items-center gap-3 mb-4">
+                    <span class="text-3xl">🎯</span> TRÒ CHƠI MỞ KHÓA
+                </h2>
+                <p class="text-slate-600 mb-6 font-medium">Giải 3 ô chữ để mở khóa bài tập:</p>
+                
+                <div class="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-3xl border-2 border-blue-200 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <!-- Câu 1 -->
+                        <div class="bg-white p-4 rounded-xl shadow-sm">
+                            <p class="text-sm font-bold text-blue-700 mb-3">Câu 1️⃣</p>
+                            <p class="text-xs mb-3">$\frac{1}{2} + \frac{1}{2} = ?$</p>
+                            <input type="number" id="puzzle-1" class="warmup-input-refined w-full" placeholder="?">
+                        </div>
+                        
+                        <!-- Câu 2 -->
+                        <div class="bg-white p-4 rounded-xl shadow-sm">
+                            <p class="text-sm font-bold text-green-700 mb-3">Câu 2️⃣</p>
+                            <p class="text-xs mb-3">$\frac{3}{4} - \frac{1}{4} = ?$</p>
+                            <select id="puzzle-2" class="warmup-input-refined w-full">
+                                <option value="">Chọn...</option>
+                                <option value="1/4">1/4</option>
+                                <option value="1/2">1/2</option>
+                                <option value="2/4">2/4</option>
+                                <option value="1">1</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Câu 3 -->
+                        <div class="bg-white p-4 rounded-xl shadow-sm">
+                            <p class="text-sm font-bold text-purple-700 mb-3">Câu 3️⃣</p>
+                            <p class="text-xs mb-3">$\frac{1}{3} \times 3 = ?$</p>
+                            <input type="number" id="puzzle-3" class="warmup-input-refined w-full" placeholder="?">
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <button onclick="checkPuzzle()" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 px-10 rounded-xl transition-all shadow-lg active:scale-95 text-lg">
+                            🔓 MỞ KHÓA
+                        </button>
+                        <p id="puzzle-hint" class="text-sm text-red-600 font-bold mt-3 hidden">💡 Hãy kiểm tra lại các câu trả lời!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="unlocked-section" class="hidden text-center animate-bounce-in">
+                <div class="text-8xl mb-4">🎉</div>
+                <h3 class="text-3xl font-black text-green-600 mb-3">MỞ KHÓA THÀNH CÔNG!</h3>
+                <p class="text-xl text-blue-600 font-bold mb-4">Bạn đã sẵn sàng!</p>
+                <div class="inline-block bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-8 py-4 rounded-2xl font-black text-xl shadow-lg animate-pulse">
+                    ⭐ +10 XP
+                </div>
+            </div>
+        </div>
+
+        <!-- MCQ -->
+        <div id="capture-mcq" class="bg-white p-6 section-dashed shadow-sm">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-xl font-bold text-blue-800 uppercase">📝 PHẦN 1: Trắc nghiệm (15 câu)</h2>
+                <button onclick="showDownloadModal('mcq')" class="btn-download">
+                    <span>📥</span> Tải
+                </button>
+            </div>
+            <div id="mcq-container" class="space-y-8"></div>
+        </div>
+
+        <!-- T/F -->
+        <div id="capture-tf" class="bg-white p-6 section-dashed shadow-sm">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-xl font-bold text-blue-800 uppercase">✔️ PHẦN 2: Đúng/Sai (5 câu)</h2>
+                <button onclick="showDownloadModal('tf')" class="btn-download">
+                    <span>📥</span> Tải
+                </button>
+            </div>
+            <div id="tf-container" class="space-y-10"></div>
+        </div>
+
+        <!-- FILL -->
+        <div id="capture-fill" class="bg-white p-6 section-dashed shadow-sm">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-xl font-bold text-blue-800 uppercase">🖋️ PHẦN 3: Điền đáp án (5 câu)</h2>
+                <button onclick="showDownloadModal('fill')" class="btn-download">
+                    <span>📥</span> Tải
+                </button>
+            </div>
+            <div id="fill-container" class="space-y-6"></div>
+        </div>
+
+        <!-- NỘP BÀI -->
+        <div class="text-center py-12">
+            <button id="submit-btn" onclick="checkResults()" class="bg-blue-600 hover:bg-blue-700 text-white font-black py-5 px-16 rounded-full shadow-2xl transition-all active:scale-95 text-xl tracking-widest flex items-center gap-4 mx-auto">
+                <span>📤</span> NỘP BÀI
+            </button>
+            <div id="result-board" class="mt-8 hidden">
+                <div class="bg-white section-dashed p-8 inline-block shadow-xl w-full max-w-2xl">
+                    <div id="score-text" class="text-4xl font-black mb-2 p-6 rounded-2xl"></div>
+                    <div id="score-message" class="text-lg font-bold mt-4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHATBOT -->
+    <div id="chatbot-container">
+        <button id="chatbot-toggle" onclick="toggleChatbot()">💬</button>
+        <div id="chatbot-window">
+            <div id="chatbot-header">
+                <div>
+                    <div style="font-weight: bold; font-size: 1rem;">Trợ lý Toán học</div>
+                    <div style="font-size: 0.75rem; opacity: 0.9;">Hỗ trợ 24/7</div>
+                </div>
+                <button id="chatbot-close" onclick="toggleChatbot()">×</button>
+            </div>
+            <div id="chatbot-messages">
+                <div class="chat-message bot">
+                    <div class="bot-avatar">💬</div>
+                    <div>
+                        <div class="message-content">
+                            Xin chào! Tôi hỗ trợ Bài 2:
+                            <br>• Cộng số hữu tỉ
+                            <br>• Trừ số hữu tỉ
+                            <br>• Nhân, chia số hữu tỉ
+                        </div>
+                        <div class="quick-questions">
+                            <button class="quick-question-btn" onclick="sendQuickQuestion('Cách cộng số hữu tỉ?')">Cách cộng?</button>
+                            <button class="quick-question-btn" onclick="sendQuickQuestion('Quy tắc nhân?')">Quy tắc nhân?</button>
+                            <button class="quick-question-btn" onclick="sendQuickQuestion('Chia như thế nào?')">Cách chia?</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="chatbot-input-area">
+                <input type="text" id="chatbot-input" placeholder="Nhập câu hỏi..." onkeypress="if(event.key==='Enter') sendMessage()">
+                <button id="chatbot-send" onclick="sendMessage()">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const QUESTION_BANK = {
+            nb: [
+                {
+                    q: "$\\frac{1}{3} + \\frac{1}{3}$ bằng:",
+                    opts: ["$\\frac{2}{3}$", "$\\frac{1}{6}$", "$\\frac{2}{6}$", "$1$"],
+                    ans: 0,
+                    exp: "$\\frac{1}{3} + \\frac{1}{3} = \\frac{2}{3}$",
+                    hint: "Cùng mẫu, cộng tử"
+                },
+                {
+                    q: "$\\frac{2}{5} - \\frac{1}{5}$ bằng:",
+                    opts: ["$\\frac{1}{5}$", "$\\frac{3}{5}$", "$\\frac{1}{10}$", "$\\frac{2}{10}$"],
+                    ans: 0,
+                    exp: "$\\frac{2}{5} - \\frac{1}{5} = \\frac{1}{5}$",
+                    hint: "Cùng mẫu, trừ tử"
+                },
+                {
+                    q: "$\\frac{2}{3} \\cdot \\frac{3}{4}$ bằng:",
+                    opts: ["$\\frac{1}{2}$", "$\\frac{6}{12}$", "$\\frac{5}{7}$", "$\\frac{2}{4}$"],
+                    ans: 0,
+                    exp: "$\\frac{2}{3} \\cdot \\frac{3}{4} = \\frac{6}{12} = \\frac{1}{2}$",
+                    hint: "Nhân tử với tử, mẫu với mẫu"
+                },
+                {
+                    q: "$\\frac{1}{2} : \\frac{1}{4}$ bằng:",
+                    opts: ["$2$", "$\\frac{1}{8}$", "$\\frac{1}{2}$", "$4$"],
+                    ans: 0,
+                    exp: "$\\frac{1}{2} : \\frac{1}{4} = \\frac{1}{2} \\cdot 4 = 2$",
+                    hint: "Nhân với phân số nghịch đảo"
+                },
+                {
+                    q: "$\\frac{3}{5} + \\frac{2}{5}$ bằng:",
+                    opts: ["$1$", "$\\frac{5}{5}$", "$\\frac{5}{10}$", "$\\frac{6}{10}$"],
+                    ans: 0,
+                    exp: "$\\frac{3}{5} + \\frac{2}{5} = \\frac{5}{5} = 1$",
+                    hint: "Cộng tử, giữ mẫu"
+                },
+                {
+                    q: "$(-\\frac{1}{2}) + \\frac{1}{2}$ bằng:",
+                    opts: ["$0$", "$1$", "$-1$", "$\\frac{1}{4}$"],
+                    ans: 0,
+                    exp: "$(-\\frac{1}{2}) + \\frac{1}{2} = 0$",
+                    hint: "Số đối nhau"
+                },
+                {
+                    q: "$\\frac{4}{7} - \\frac{2}{7}$ bằng:",
+                    opts: ["$\\frac{2}{7}$", "$\\frac{6}{7}$", "$\\frac{2}{14}$", "$\\frac{4}{14}$"],
+                    ans: 0,
+                    exp: "$\\frac{4}{7} - \\frac{2}{7} = \\frac{2}{7}$",
+                    hint: "Trừ tử, giữ mẫu"
+                }
+            ],
+            th: [
+                {
+                    q: "$\\frac{1}{2} + \\frac{1}{3}$ bằng:",
+                    opts: ["$\\frac{5}{6}$", "$\\frac{2}{5}$", "$\\frac{1}{6}$", "$\\frac{3}{6}$"],
+                    ans: 0,
+                    exp: "$\\frac{1}{2} + \\frac{1}{3} = \\frac{3}{6} + \\frac{2}{6} = \\frac{5}{6}$",
+                    hint: "Quy đồng mẫu 6"
+                },
+                {
+                    q: "$\\frac{3}{4} - \\frac{1}{2}$ bằng:",
+                    opts: ["$\\frac{1}{4}$", "$\\frac{2}{4}$", "$\\frac{1}{2}$", "$\\frac{2}{2}$"],
+                    ans: 0,
+                    exp: "$\\frac{3}{4} - \\frac{1}{2} = \\frac{3}{4} - \\frac{2}{4} = \\frac{1}{4}$",
+                    hint: "Quy đồng mẫu 4"
+                },
+                {
+                    q: "$\\frac{2}{3} \\cdot \\frac{9}{4}$ bằng:",
+                    opts: ["$\\frac{3}{2}$", "$\\frac{18}{12}$", "$\\frac{11}{7}$", "$\\frac{6}{4}$"],
+                    ans: 0,
+                    exp: "$\\frac{2}{3} \\cdot \\frac{9}{4} = \\frac{18}{12} = \\frac{3}{2}$",
+                    hint: "Rút gọn sau khi nhân"
+                },
+                {
+                    q: "$\\frac{5}{6} : \\frac{2}{3}$ bằng:",
+                    opts: ["$\\frac{5}{4}$", "$\\frac{10}{18}$", "$\\frac{15}{12}$", "$\\frac{3}{4}$"],
+                    ans: 0,
+                    exp: "$\\frac{5}{6} : \\frac{2}{3} = \\frac{5}{6} \\cdot \\frac{3}{2} = \\frac{15}{12} = \\frac{5}{4}$",
+                    hint: "Nhân nghịch đảo rồi rút gọn"
+                },
+                {
+                    q: "$(-\\frac{2}{3}) \\cdot \\frac{3}{4}$ bằng:",
+                    opts: ["$-\\frac{1}{2}$", "$\\frac{1}{2}$", "$-\\frac{6}{12}$", "$-1$"],
+                    ans: 0,
+                    exp: "$(-\\frac{2}{3}) \\cdot \\frac{3}{4} = -\\frac{6}{12} = -\\frac{1}{2}$",
+                    hint: "Âm nhân dương = âm"
+                }
+            ],
+            vd: [
+                {
+                    q: "$\\frac{1}{4} + \\frac{2}{3} - \\frac{1}{6}$ bằng:",
+                    opts: ["$\\frac{3}{4}$", "$\\frac{5}{6}$", "$\\frac{7}{12}$", "$\\frac{1}{2}$"],
+                    ans: 0,
+                    exp: "$\\frac{3}{12} + \\frac{8}{12} - \\frac{2}{12} = \\frac{9}{12} = \\frac{3}{4}$",
+                    hint: "Quy đồng mẫu 12"
+                },
+                {
+                    q: "$\\frac{2}{5} \\cdot \\frac{5}{8} \\cdot 4$ bằng:",
+                    opts: ["$1$", "$\\frac{1}{2}$", "$2$", "$\\frac{5}{4}$"],
+                    ans: 0,
+                    exp: "$\\frac{2 \\cdot 5 \\cdot 4}{5 \\cdot 8} = \\frac{40}{40} = 1$",
+                    hint: "Rút gọn trước khi nhân"
+                },
+                {
+                    q: "$\\frac{3}{4} : \\frac{9}{16}$ bằng:",
+                    opts: ["$\\frac{4}{3}$", "$\\frac{27}{64}$", "$\\frac{3}{4}$", "$\\frac{12}{9}$"],
+                    ans: 0,
+                    exp: "$\\frac{3}{4} \\cdot \\frac{16}{9} = \\frac{48}{36} = \\frac{4}{3}$",
+                    hint: "Nhân nghịch đảo"
+                }
+            ]
+        };
+
+        const TF_BANK = [
+            {
+                q: "Cộng số hữu tỉ",
+                items: [
+                    {t: "a) $\\frac{1}{4} + \\frac{1}{4} = \\frac{2}{4}$", a: true, exp: "Cùng mẫu, cộng tử", h: "Cộng tử"},
+                    {t: "b) $\\frac{1}{2} + \\frac{1}{3} = \\frac{2}{5}$", a: false, exp: "Phải quy đồng = $\\frac{5}{6}$", h: "Quy đồng"},
+                    {t: "c) $\\frac{2}{5} + \\frac{3}{5} = 1$", a: true, exp: "$\\frac{5}{5} = 1$", h: "Đúng"},
+                    {t: "d) $(-\\frac{1}{3}) + \\frac{1}{3} = 0$", a: true, exp: "Hai số đối", h: "Số đối"}
+                ]
+            },
+            {
+                q: "Trừ số hữu tỉ",
+                items: [
+                    {t: "a) $\\frac{3}{4} - \\frac{1}{4} = \\frac{2}{4}$", a: true, exp: "Cùng mẫu, trừ tử", h: "Trừ tử"},
+                    {t: "b) $\\frac{1}{2} - \\frac{1}{3} = \\frac{1}{6}$", a: true, exp: "$\\frac{3}{6} - \\frac{2}{6} = \\frac{1}{6}$", h: "Quy đồng"},
+                    {t: "c) $1 - \\frac{1}{5} = \\frac{4}{5}$", a: true, exp: "$\\frac{5}{5} - \\frac{1}{5} = \\frac{4}{5}$", h: "Đúng"},
+                    {t: "d) $\\frac{2}{3} - \\frac{2}{3} = 1$", a: false, exp: "Bằng 0", h: "Bằng 0"}
+                ]
+            },
+            {
+                q: "Nhân số hữu tỉ",
+                items: [
+                    {t: "a) $\\frac{1}{2} \\cdot \\frac{1}{3} = \\frac{1}{6}$", a: true, exp: "Nhân tử, nhân mẫu", h: "Đúng"},
+                    {t: "b) $\\frac{2}{3} \\cdot \\frac{3}{2} = 1$", a: true, exp: "$\\frac{6}{6} = 1$", h: "Nghịch đảo"},
+                    {t: "c) $(-\\frac{1}{2}) \\cdot \\frac{1}{2} = \\frac{1}{4}$", a: false, exp: "$= -\\frac{1}{4}$", h: "Âm nhân dương"},
+                    {t: "d) $\\frac{3}{4} \\cdot 0 = 0$", a: true, exp: "Nhân 0 = 0", h: "Đúng"}
+                ]
+            },
+            {
+                q: "Chia số hữu tỉ",
+                items: [
+                    {t: "a) $\\frac{1}{2} : \\frac{1}{3} = \\frac{3}{2}$", a: true, exp: "$\\frac{1}{2} \\cdot 3 = \\frac{3}{2}$", h: "Nhân nghịch đảo"},
+                    {t: "b) $\\frac{2}{3} : 2 = \\frac{1}{3}$", a: true, exp: "$\\frac{2}{3} \\cdot \\frac{1}{2} = \\frac{1}{3}$", h: "Đúng"},
+                    {t: "c) $1 : \\frac{1}{4} = 4$", a: true, exp: "$1 \\cdot 4 = 4$", h: "Đúng"},
+                    {t: "d) $\\frac{3}{4} : 0 = 0$", a: false, exp: "Không chia được cho 0", h: "Không xác định"}
+                ]
+            },
+            {
+                q: "Quy tắc dấu",
+                items: [
+                    {t: "a) $(-\\frac{1}{2}) \\cdot (-\\frac{1}{3}) = \\frac{1}{6}$", a: true, exp: "Âm nhân âm = dương", h: "Dấu +"},
+                    {t: "b) $\\frac{2}{3} \\cdot (-\\frac{1}{2}) = -\\frac{1}{3}$", a: true, exp: "Dương nhân âm = âm", h: "Dấu -"},
+                    {t: "c) $(-\\frac{3}{4}) : (-\\frac{1}{2}) = \\frac{3}{2}$", a: true, exp: "Âm chia âm = dương", h: "Dấu +"},
+                    {t: "d) $(-1) + (-1) = 2$", a: false, exp: "$= -2$", h: "Âm cộng âm"}
+                ]
+            },
+            {
+                q: "Tính chất",
+                items: [
+                    {t: "a) $\\frac{1}{3} + \\frac{2}{3} = \\frac{2}{3} + \\frac{1}{3}$", a: true, exp: "Giao hoán cộng", h: "Đúng"},
+                    {t: "b) $(\\frac{1}{2} + \\frac{1}{3}) + \\frac{1}{6} = \\frac{1}{2} + (\\frac{1}{3} + \\frac{1}{6})$", a: true, exp: "Kết hợp cộng", h: "Đúng"},
+                    {t: "c) $\\frac{2}{3} \\cdot \\frac{3}{4} = \\frac{3}{4} \\cdot \\frac{2}{3}$", a: true, exp: "Giao hoán nhân", h: "Đúng"},
+                    {t: "d) $\\frac{1}{2} - \\frac{1}{3} = \\frac{1}{3} - \\frac{1}{2}$", a: false, exp: "Trừ không giao hoán", h: "Sai"}
+                ]
+            },
+            {
+                q: "Phép tính hỗn hợp",
+                items: [
+                    {t: "a) $\\frac{1}{2} + \\frac{1}{4} \\cdot 2 = (\\frac{1}{2} + \\frac{1}{4}) \\cdot 2$", a: false, exp: "Nhân trước cộng sau", h: "Thứ tự"},
+                    {t: "b) $\\frac{2}{3} \\cdot (\\frac{1}{2} + \\frac{1}{6}) = \\frac{2}{3} \\cdot \\frac{2}{3}$", a: true, exp: "Ngoặc trước", h: "Đúng"},
+                    {t: "c) $1 - \\frac{1}{2} + \\frac{1}{4} = \\frac{3}{4}$", a: true, exp: "Từ trái qua phải", h: "Đúng"},
+                    {t: "d) $\\frac{1}{2} : \\frac{1}{4} = \\frac{1}{2} \\cdot 4$", a: true, exp: "Chia = nhân nghịch đảo", h: "Đúng"}
+                ]
+            },
+            {
+                q: "Rút gọn",
+                items: [
+                    {t: "a) $\\frac{6}{8} = \\frac{3}{4}$", a: true, exp: "Chia cả tử và mẫu cho 2", h: "Rút gọn"},
+                    {t: "b) $\\frac{15}{20} = \\frac{3}{4}$", a: true, exp: "Chia cho 5", h: "Đúng"},
+                    {t: "c) $\\frac{12}{16} = \\frac{6}{8}$", a: true, exp: "Chia cho 2", h: "Đúng"},
+                    {t: "d) $\\frac{2}{3} \\cdot \\frac{6}{4} = \\frac{12}{12}$", a: true, exp: "$= 1$", h: "Bằng 1"}
+                ]
+            }
+        ];
+
+        const FILL_BANK = [
+            {q: "$\\frac{1}{5} + \\frac{2}{5} = ?$", a: "3/5", exp: "Cộng tử, giữ mẫu", hint: "Cùng mẫu"},
+            {q: "$\\frac{4}{7} - \\frac{1}{7} = ?$", a: "3/7", exp: "Trừ tử, giữ mẫu", hint: "Cùng mẫu"},
+            {q: "$\\frac{1}{3} \\cdot \\frac{1}{2} = ?$", a: "1/6", exp: "Nhân tử với tử", hint: "Nhân"},
+            {q: "$\\frac{1}{2} : \\frac{1}{4} = ?$", a: "2", exp: "$\\frac{1}{2} \\cdot 4 = 2$", hint: "Nhân nghịch đảo"},
+            {q: "$\\frac{1}{2} + \\frac{1}{4} = ?$", a: "3/4", exp: "$\\frac{2}{4} + \\frac{1}{4} = \\frac{3}{4}$", hint: "Quy đồng 4"},
+            {q: "$\\frac{3}{4} - \\frac{1}{2} = ?$", a: "1/4", exp: "$\\frac{3}{4} - \\frac{2}{4} = \\frac{1}{4}$", hint: "Quy đồng 4"},
+            {q: "$\\frac{2}{3} \\cdot \\frac{3}{2} = ?$", a: "1", exp: "$\\frac{6}{6} = 1$", hint: "Nghịch đảo"},
+            {q: "$1 : \\frac{1}{5} = ?$", a: "5", exp: "$1 \\cdot 5 = 5$", hint: "Nhân 5"},
+            {q: "$(-\\frac{1}{2}) + \\frac{1}{2} = ?$", a: "0", exp: "Hai số đối", hint: "Số đối"},
+            {q: "$\\frac{2}{5} \\cdot 0 = ?$", a: "0", exp: "Nhân 0 = 0", hint: "Nhân 0"},
+            {q: "$\\frac{6}{8}$ rút gọn = ?", a: "3/4", exp: "Chia 2", hint: "Rút gọn"},
+            {q: "$\\frac{1}{3} + \\frac{1}{6} = ?$", a: "1/2", exp: "$\\frac{2}{6} + \\frac{1}{6} = \\frac{3}{6} = \\frac{1}{2}$", hint: "Quy đồng 6"}
+        ];
+
+        let MCQ = [], TF = [], FILL = [];
+        let userMcq = Array(15).fill(null);
+        let userTf = Array(5).fill(null).map(() => Array(4).fill(null));
+        let submitted = false;
+        let currentDownloadType = null;
+
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+        }
+
+        function generateQuestions() {
+            MCQ = [];
+            
+            const nb = [...QUESTION_BANK.nb];
+            shuffle(nb);
+            for (let i = 0; i < 7; i++) {
+                const q = nb[i % nb.length];
+                MCQ.push(q.gen ? {...q.gen(), l: "nb"} : {...q, l: "nb"});
+            }
+            
+            const th = [...QUESTION_BANK.th];
+            shuffle(th);
+            for (let i = 0; i < 5; i++) {
+                const q = th[i % th.length];
+                MCQ.push(q.gen ? {...q.gen(), l: "th"} : {...q, l: "th"});
+            }
+            
+            const vd = [...QUESTION_BANK.vd];
+            shuffle(vd);
+            for (let i = 0; i < 3; i++) {
+                const q = vd[i % vd.length];
+                MCQ.push(q.gen ? {...q.gen(), l: "vd"} : {...q, l: "vd"});
+            }
+
+            const tfPool = [...TF_BANK];
+            shuffle(tfPool);
+            TF = tfPool.slice(0, 5);
+
+            const fillPool = [...FILL_BANK];
+            shuffle(fillPool);
+            FILL = fillPool.slice(0, 5);
+        }
+
+        function init() {
+            generateQuestions();
+            renderAll();
+        }
+
+        function toggleHint(id) {
+            const el = document.getElementById(id);
+            el.style.display = el.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function renderAll() {
+            const mcqBox = document.getElementById('mcq-container');
+            mcqBox.innerHTML = "";
+            
+            MCQ.forEach((d, i) => {
+                if (!d || !d.q) return;
+                
+                let badge = '';
+                if (d.l === 'nb') badge = '<span class="level-badge level-nhan-biet">NHẬN BIẾT</span>';
+                else if (d.l === 'th') badge = '<span class="level-badge level-thong-hieu">THÔNG HIỂU</span>';
+                else if (d.l === 'vd') badge = '<span class="level-badge level-van-dung">VẬN DỤNG</span>';
+
+                const opts = (d.opts || d.options || []).map((o, j) => 
+                    `<div onclick="setMcq(${i},${j})" id="mcq-${i}-${j}" class="mcq-option p-4 bg-white shadow-sm flex items-center mb-2">
+                        <span class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 mr-3 font-bold text-xs">${String.fromCharCode(65+j)}</span> ${o}
+                    </div>`
+                ).join('');
+                
+                mcqBox.innerHTML += `
+                    <div class="p-5 border-b" id="mcq-card-${i}">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="font-bold text-blue-600">CÂU ${i+1} ${badge}</span>
+                            <button onclick="toggleHint('mcq-hint-${i}')" class="hint-btn">💡 Gợi ý</button>
+                        </div>
+                        <p class="mb-4 text-slate-700 font-medium">${d.q}</p>
+                        <div id="mcq-hint-${i}" class="hint-box">💡 ${d.hint}</div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">${opts}</div>
+                        <div id="mcq-fb-${i}" class="feedback-box"></div>
+                    </div>
+                `;
+            });
+
+            const tfBox = document.getElementById('tf-container');
+            tfBox.innerHTML = "";
+            TF.forEach((d, i) => {
+                const rows = d.items.map((it, j) => `
+                    <tr class="border-b">
+                        <td class="py-4 px-4 text-sm font-medium">
+                            ${it.t}
+                            <button onclick="toggleHint('tf-hint-${i}-${j}')" class="hint-btn">💡 Gợi ý</button>
+                            <div id="tf-hint-${i}-${j}" class="hint-box">💡 ${it.h}</div>
+                            <div id="tf-fb-${i}-${j}" class="feedback-box"></div>
+                        </td>
+                        <td class="p-2 text-center">
+                            <button onclick="setTf(${i},${j},true)" id="tf-btn-${i}-${j}-t" class="check-btn w-10 h-10 rounded-xl">Đ</button>
+                        </td>
+                        <td class="p-2 text-center">
+                            <button onclick="setTf(${i},${j},false)" id="tf-btn-${i}-${j}-s" class="check-btn w-10 h-10 rounded-xl">S</button>
+                        </td>
+                    </tr>
+                `).join('');
+                
+                tfBox.innerHTML += `
+                    <div class="bg-slate-50 rounded-2xl border overflow-hidden">
+                        <div class="bg-white p-4 font-bold text-blue-800 border-b">Câu ${i+1}: ${d.q}</div>
+                        <table class="w-full"><tbody>${rows}</tbody></table>
+                    </div>
+                `;
+            });
+
+            const fillBox = document.getElementById('fill-container');
+            fillBox.innerHTML = "";
+            FILL.forEach((d, i) => {
+                fillBox.innerHTML += `
+                    <div class="bg-slate-50 p-5 rounded-2xl border space-y-2">
+                        <div class="flex items-start justify-between">
+                            <span><strong>Câu ${i+1}.</strong> ${d.q}</span>
+                            <button onclick="toggleHint('fill-hint-${i}')" class="hint-btn">💡 Gợi ý</button>
+                        </div>
+                        <div id="fill-hint-${i}" class="hint-box">💡 ${d.hint}</div>
+                        <div class="flex items-center gap-4 mt-2">
+                            <input type="text" id="fill-${i}" class="fill-input">
+                        </div>
+                        <div id="fill-fb-${i}" class="feedback-box"></div>
+                    </div>
+                `;
+            });
+            
+            if (window.MathJax) MathJax.typeset();
+        }
+
+        function setMcq(q, o) {
+            if (submitted) return;
+            userMcq[q] = o;
+            document.getElementById(`mcq-card-${q}`).querySelectorAll('.mcq-option').forEach(opt => opt.classList.remove('selected'));
+            document.getElementById(`mcq-${q}-${o}`).classList.add('selected');
+        }
+
+        function setTf(q, i, v) {
+            if (submitted) return;
+            userTf[q][i] = v;
+            document.getElementById(`tf-btn-${q}-${i}-t`).classList.remove('selected-true');
+            document.getElementById(`tf-btn-${q}-${i}-s`).classList.remove('selected-false');
+            if (v) document.getElementById(`tf-btn-${q}-${i}-t`).classList.add('selected-true');
+            else document.getElementById(`tf-btn-${q}-${i}-s`).classList.add('selected-false');
+        }
+
+        function celebrate(score) {
+            const pct = (score / 10) * 100;
+            if (pct >= 90) {
+                const end = Date.now() + 3000;
+                const interval = setInterval(() => {
+                    if (Date.now() > end) { clearInterval(interval); return; }
+                    confetti({ particleCount: 100, spread: 160, origin: { y: 0.6 } });
+                }, 250);
+            } else if (pct >= 70) {
+                confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
+                setTimeout(() => confetti({ particleCount: 100, spread: 80, origin: { y: 0.6 } }), 500);
+            } else if (pct >= 50) {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            } else {
+                confetti({ particleCount: 50, spread: 50, origin: { y: 0.6 } });
+            }
+        }
+
+        function checkResults() {
+            submitted = true;
+            let correct = 0;
+            let total = MCQ.length + TF.length * 4 + FILL.length;
+
+            MCQ.forEach((d, i) => {
+                const fb = document.getElementById(`mcq-fb-${i}`);
+                const opts = document.getElementById(`mcq-card-${i}`).querySelectorAll('.mcq-option');
+                const correctIdx = d.ans !== undefined ? d.ans : d.correct;
+                opts[correctIdx].classList.add('correct');
+                
+                if (userMcq[i] === correctIdx) {
+                    correct++;
+                    fb.innerHTML = "✔️ <strong>Đúng!</strong> " + d.exp;
+                    fb.className = "feedback-box block text-green-700 bg-green-50 border-green-300";
+                    fb.style.display = 'block';
+                } else {
+                    if (userMcq[i] !== null) opts[userMcq[i]].classList.add('wrong');
+                    fb.innerHTML = "❌ <strong>Sai!</strong> " + d.exp;
+                    fb.className = "feedback-box block text-red-700 bg-red-50 border-red-300";
+                    fb.style.display = 'block';
+                }
+            });
+
+            TF.forEach((d, i) => {
+                d.items.forEach((it, j) => {
+                    const fb = document.getElementById(`tf-fb-${i}-${j}`);
+                    if (userTf[i][j] === it.a) {
+                        correct++;
+                        fb.innerHTML = "✔️ " + it.exp;
+                        fb.className = "feedback-box block text-green-700 bg-green-50 border-green-300";
+                    } else {
+                        fb.innerHTML = "❌ " + it.exp;
+                        fb.className = "feedback-box block text-red-700 bg-red-50 border-red-300";
+                    }
+                    fb.style.display = 'block';
+                    if (it.a) document.getElementById(`tf-btn-${i}-${j}-t`).classList.add('correct-highlight');
+                    else document.getElementById(`tf-btn-${i}-${j}-s`).classList.add('correct-highlight');
+                });
+            });
+
+            FILL.forEach((d, i) => {
+                const input = document.getElementById(`fill-${i}`);
+                const fb = document.getElementById(`fill-fb-${i}`);
+                const user = input.value.trim().toLowerCase().replace(/\s+/g, '');
+                const ans = d.a.toLowerCase().replace(/\s+/g, '');
+                
+                if (user === ans) {
+                    correct++;
+                    input.classList.add('fill-correct');
+                    fb.innerHTML = "✔️ " + d.exp;
+                    fb.className = "feedback-box block text-green-700 bg-green-50 border-green-300";
+                } else {
+                    input.classList.add('fill-wrong');
+                    fb.innerHTML = "❌ Đáp án: <strong>" + d.a + "</strong>. " + d.exp;
+                    fb.className = "feedback-box block text-red-700 bg-red-50 border-red-300";
+                }
+                fb.style.display = 'block';
+            });
+
+            const score = (correct / total) * 10;
+            const pct = (correct / total) * 100;
+            
+            document.getElementById('submit-btn').classList.add('hidden');
+            document.getElementById('result-board').classList.remove('hidden');
+            
+            const scoreText = document.getElementById('score-text');
+            scoreText.innerHTML = `
+                <div class="text-center">
+                    <div class="text-5xl font-black mb-2">${score.toFixed(1)}/10</div>
+                    <div class="text-lg">Đúng ${correct}/${total} câu (${pct.toFixed(0)}%)</div>
+                </div>
+            `;
+            
+            if (pct >= 90) {
+                scoreText.classList.add('score-excellent');
+                document.getElementById('score-message').innerHTML = '🎉 <span class="text-green-600">XUẤT SẮC!</span>';
+            } else if (pct >= 70) {
+                scoreText.classList.add('score-good');
+                document.getElementById('score-message').innerHTML = '👏 <span class="text-blue-600">KHÁ TỐT!</span>';
+            } else if (pct >= 50) {
+                scoreText.classList.add('score-average');
+                document.getElementById('score-message').innerHTML = '💪 <span class="text-orange-600">TRUNG BÌNH</span>';
+            } else {
+                scoreText.classList.add('score-low');
+                document.getElementById('score-message').innerHTML = '📚 <span class="text-red-600">CẦN CỐ GẮNG</span>';
+            }
+            
+            celebrate(score);
+            showOptions();
+            
+            if (window.MathJax) MathJax.typeset();
+            document.getElementById('result-board').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function showOptions() {
+            const old = document.getElementById('post-options');
+            if (old) old.remove();
+
+            const container = document.getElementById('result-board');
+            const div = document.createElement('div');
+            div.id = 'post-options';
+            div.className = 'mt-8 p-6 bg-white rounded-2xl shadow-xl border-2 border-blue-400 animate-bounce-in';
+            
+            div.innerHTML = `
+                <h3 class="text-xl font-bold text-blue-800 mb-4 text-center">🌟 Tiếp tục?</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <button onclick="regenerate('retry')" class="p-4 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all border-b-4 border-gray-300 active:border-b-0 font-bold text-gray-700">
+                        🔄 Làm lại
+                    </button>
+                    <button onclick="regenerate('equivalent')" class="p-4 bg-blue-100 hover:bg-blue-200 rounded-xl transition-all border-b-4 border-blue-300 active:border-b-0 font-bold text-blue-700">
+                        📚 Đề mới tương đương
+                    </button>
+                    <button onclick="regenerate('harder')" class="p-4 bg-orange-100 hover:bg-orange-200 rounded-xl transition-all border-b-4 border-orange-300 active:border-b-0 font-bold text-orange-700">
+                        🚀 Đề nâng cao
+                    </button>
+                </div>
+            `;
+            container.appendChild(div);
+        }
+
+        async function regenerate(mode) {
+            document.getElementById('loading-overlay').style.display = 'flex';
+            await new Promise(r => setTimeout(r, 800));
+            
+            if (mode === 'retry') {
+                submitted = false;
+                userMcq = Array(15).fill(null);
+                userTf = Array(5).fill(null).map(() => Array(4).fill(null));
+                const opts = document.getElementById('post-options');
+                if (opts) opts.remove();
+                document.getElementById('submit-btn').classList.remove('hidden');
+                document.getElementById('result-board').classList.add('hidden');
+                renderAll();
+            } else {
+                generateQuestions();
+                submitted = false;
+                userMcq = Array(15).fill(null);
+                userTf = Array(5).fill(null).map(() => Array(4).fill(null));
+                const opts = document.getElementById('post-options');
+                if (opts) opts.remove();
+                document.getElementById('result-board').classList.add('hidden');
+                document.getElementById('submit-btn').classList.remove('hidden');
+                renderAll();
+            }
+            
+            document.getElementById('loading-overlay').style.display = 'none';
+            document.getElementById('capture-mcq').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function checkPuzzle() {
+            const ans1 = document.getElementById('puzzle-1').value.trim();
+            const ans2 = document.getElementById('puzzle-2').value.trim();
+            const ans3 = document.getElementById('puzzle-3').value.trim();
+            
+            const hint = document.getElementById('puzzle-hint');
+            
+            if (ans1 === "1" && ans2 === "1/2" && ans3 === "1") {
+                document.getElementById('puzzle-task').classList.add('hidden');
+                document.getElementById('unlocked-section').classList.remove('hidden');
+                confetti({ 
+                    particleCount: 150, 
+                    spread: 120, 
+                    origin: { y: 0.6 },
+                    colors: ['#FFD700', '#FFA500', '#FF6347', '#4169E1', '#32CD32']
+                });
+                setTimeout(() => {
+                    confetti({ 
+                        particleCount: 100, 
+                        spread: 100, 
+                        origin: { y: 0.6 },
+                        colors: ['#FFD700', '#FFA500', '#FF6347']
+                    });
+                }, 200);
+            } else {
+                hint.classList.remove('hidden');
+                setTimeout(() => hint.classList.add('hidden'), 3000);
+            }
+        }
+
+        // DOWNLOAD FUNCTIONS
+        function showDownloadModal(type) {
+            currentDownloadType = type;
+            const modal = document.getElementById('download-modal');
+            const container = document.getElementById('download-options-container');
+            
+            let title = '';
+            if (type === 'knowledge') title = 'Kiến Thức';
+            else if (type === 'mcq') title = 'Đề Trắc Nghiệm';
+            else if (type === 'tf') title = 'Đề Đúng/Sai';
+            else if (type === 'fill') title = 'Đề Trả Lời Ngắn';
+            
+            container.innerHTML = `
+                <div class="download-option" onclick="downloadAsText('${type}')">
+                    <div class="download-option-icon">📄</div>
+                    <div class="download-option-text">
+                        <div class="download-option-title">Tải dạng Text</div>
+                        <div class="download-option-desc">Sao chép văn bản (.txt) - Hoạt động tốt nhất</div>
+                    </div>
+                </div>
+                
+                <div class="download-option" onclick="downloadAsImage('${type}')">
+                    <div class="download-option-icon">🖼️</div>
+                    <div class="download-option-text">
+                        <div class="download-option-title">Tải dạng Ảnh</div>
+                        <div class="download-option-desc">Chụp màn hình (.png)</div>
+                    </div>
+                </div>
+                
+                <div class="download-option" onclick="shareContent('${type}')">
+                    <div class="download-option-icon">📤</div>
+                    <div class="download-option-text">
+                        <div class="download-option-title">Chia sẻ</div>
+                        <div class="download-option-desc">Gửi qua ứng dụng khác</div>
+                    </div>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeDownloadModal() {
+            document.getElementById('download-modal').style.display = 'none';
+        }
+
+        function downloadAsText(type) {
+            const loadingOverlay = document.getElementById('loading-overlay');
+            loadingOverlay.style.display = 'flex';
+            loadingOverlay.querySelector('p').textContent = 'Đang tạo file...';
+            
+            let content = '';
+            let filename = '';
+            
+            if (type === 'knowledge') {
+                filename = 'Kien-thuc-Cong-tru-nhan-chia-so-huu-ti.txt';
+                content = `BÀI 2: CỘNG, TRỪ, NHÂN, CHIA SỐ HỮU TỈ
+Kết nối tri thức - Toán 7
+
+KIẾN THỨC TRỌNG TÂM
+
+1. CỘNG HAI SỐ HỮU TỈ
+Quy tắc: Muốn cộng hai số hữu tỉ, ta viết chúng dưới dạng hai phân số có cùng mẫu dương rồi cộng các tử và giữ nguyên mẫu chung.
+
+Công thức: Với a, b, c ∈ Z, b > 0:
+   a/b + c/b = (a + c)/b
+
+Ví dụ: 
+   • 2/7 + 3/7 = (2+3)/7 = 5/7
+   • 1/2 + 1/3 = 3/6 + 2/6 = 5/6
+
+2. TRỪ HAI SỐ HỮU TỈ
+Quy tắc: Muốn trừ hai số hữu tỉ, ta cộng số bị trừ với số đối của số trừ.
+
+Công thức: Với x, y ∈ Q:
+   x - y = x + (-y)
+
+Ví dụ:
+   5/6 - 1/2 = 5/6 + (-1/2) = 5/6 - 3/6 = 2/6 = 1/3
+
+3. NHÂN HAI SỐ HỮU TỈ
+Quy tắc: Muốn nhân hai số hữu tỉ, ta nhân các tử với nhau và nhân các mẫu với nhau.
+
+Công thức: Với a, b, c, d ∈ Z, b, d ≠ 0:
+   (a/b) × (c/d) = (a × c)/(b × d)
+
+Ví dụ:
+   • 2/3 × 5/7 = (2 × 5)/(3 × 7) = 10/21
+   • (-3/4) × (2/5) = ((-3) × 2)/(4 × 5) = -6/20 = -3/10
+
+4. CHIA HAI SỐ HỮU TỈ
+Quy tắc: Muốn chia một số hữu tỉ cho một số hữu tỉ khác 0, ta nhân số bị chia với số nghịch đảo của số chia.
+
+Công thức: Với a, b, c, d ∈ Z, b, c, d ≠ 0:
+   (a/b) : (c/d) = (a/b) × (d/c) = (a × d)/(b × c)
+
+Ví dụ:
+   • 3/4 : 2/5 = 3/4 × 5/2 = 15/8
+   • (-5/6) : (3/4) = (-5/6) × (4/3) = -20/18 = -10/9
+
+5. TÍNH CHẤT CÁC PHÉP TOÁN
+• Tính chất giao hoán: 
+   a + b = b + a;  a × b = b × a
+
+• Tính chất kết hợp:
+   (a + b) + c = a + (b + c)
+   (a × b) × c = a × (b × c)
+
+• Tính chất phân phối:
+   a × (b + c) = a × b + a × c
+`;
+            } else if (type === 'mcq') {
+                filename = 'De-Trac-Nghiem.txt';
+                content = 'PHẦN 1: TRẮC NGHIỆM (15 CÂU)\n\n';
+                MCQ.forEach((q, i) => {
+                    content += `Câu ${i+1}: ${q.q.replace(/\$/g, '').replace(/\\frac/g, '').replace(/\\cdot/g, '×')}\n`;
+                    q.opts.forEach((opt, j) => {
+                        content += `  ${String.fromCharCode(65+j)}. ${opt.replace(/\$/g, '').replace(/\\frac/g, '').replace(/\\cdot/g, '×')}\n`;
+                    });
+                    content += '\n';
+                });
+            } else if (type === 'tf') {
+                filename = 'De-Dung-Sai.txt';
+                content = 'PHẦN 2: ĐÚNG/SAI (5 CÂU)\n\n';
+                TF.forEach((group, i) => {
+                    content += `Câu ${i+1}: ${group.q}\n`;
+                    group.items.forEach(item => {
+                        content += `  ${item.t.replace(/\$/g, '').replace(/\\frac/g, '').replace(/\\cdot/g, '×')}\n`;
+                    });
+                    content += '\n';
+                });
+            } else if (type === 'fill') {
+                filename = 'De-Tra-Loi-Ngan.txt';
+                content = 'PHẦN 3: ĐIỀN ĐÁP ÁN (5 CÂU)\n\n';
+                FILL.forEach((q, i) => {
+                    content += `Câu ${i+1}: ${q.q.replace(/\$/g, '').replace(/\\frac/g, '').replace(/\\cdot/g, '×')}\n\n`;
+                });
+            }
+            
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            loadingOverlay.style.display = 'none';
+            closeDownloadModal();
+        }
+
+        async function downloadAsImage(type) {
+            const loadingOverlay = document.getElementById('loading-overlay');
+            loadingOverlay.style.display = 'flex';
+            loadingOverlay.querySelector('p').textContent = 'Đang chụp ảnh...';
+            
+            try {
+                let elementId = '';
+                let filename = '';
+                
+                if (type === 'knowledge') {
+                    elementId = 'capture-knowledge';
+                    filename = 'Kien-thuc.png';
+                } else if (type === 'mcq') {
+                    elementId = 'capture-mcq';
+                    filename = 'De-Trac-Nghiem.png';
+                } else if (type === 'tf') {
+                    elementId = 'capture-tf';
+                    filename = 'De-Dung-Sai.png';
+                } else if (type === 'fill') {
+                    elementId = 'capture-fill';
+                    filename = 'De-Tra-Loi-Ngan.png';
+                }
+                
+                const element = document.getElementById(elementId);
+                const canvas = await html2canvas(element, {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: '#ffffff',
+                    logging: false
+                });
+                
+                canvas.toBlob(blob => {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    
+                    loadingOverlay.style.display = 'none';
+                    closeDownloadModal();
+                });
+            } catch (error) {
+                loadingOverlay.style.display = 'none';
+                alert('Không thể tạo ảnh. Vui lòng thử tải dạng Text!');
+            }
+        }
+
+        async function shareContent(type) {
+            if (!navigator.share) {
+                alert('Trình duyệt không hỗ trợ chia sẻ. Vui lòng dùng tính năng Tải xuống!');
+                return;
+            }
+            
+            let text = '';
+            let title = '';
+            
+            if (type === 'knowledge') {
+                title = 'Kiến thức Toán 7 - Bài 2';
+                text = `KIẾN THỨC TRỌNG TÂM
+
+1. CỘNG HAI SỐ HỮU TỈ
+Quy tắc: Muốn cộng hai số hữu tỉ, ta viết chúng dưới dạng hai phân số có cùng mẫu dương rồi cộng các tử và giữ nguyên mẫu chung.
+Công thức: a/b + c/b = (a + c)/b
+
+2. TRỪ HAI SỐ HỮU TỈ
+Quy tắc: Muốn trừ hai số hữu tỉ, ta cộng số bị trừ với số đối của số trừ.
+Công thức: x - y = x + (-y)
+
+3. NHÂN HAI SỐ HỮU TỈ
+Quy tắc: Muốn nhân hai số hữu tỉ, ta nhân các tử với nhau và nhân các mẫu với nhau.
+Công thức: (a/b) × (c/d) = (a × c)/(b × d)
+
+4. CHIA HAI SỐ HỮU TỈ
+Quy tắc: Muốn chia một số hữu tỉ cho một số hữu tỉ khác 0, ta nhân số bị chia với số nghịch đảo của số chia.
+Công thức: (a/b) : (c/d) = (a/b) × (d/c)`;
+            } else if (type === 'mcq') {
+                title = 'Đề Trắc Nghiệm - Toán 7 Bài 2';
+                text = 'PHẦN 1: TRẮC NGHIỆM (15 CÂU)\n\n';
+                MCQ.slice(0, 3).forEach((q, i) => {
+                    text += `Câu ${i+1}: ${q.q.replace(/\$/g, '')}\n`;
+                });
+                text += '\n... (xem toàn bộ trong file)';
+            }
+            
+            try {
+                await navigator.share({
+                    title: title,
+                    text: text
+                });
+                closeDownloadModal();
+            } catch (error) {
+                if (error.name !== 'AbortError') {
+                    alert('Không thể chia sẻ. Vui lòng dùng tính năng Tải xuống!');
+                }
+            }
+        }
+
+        // CHATBOT
+        const CHATBOT_KNOWLEDGE = {
+            'cộng': 'Quy đồng mẫu rồi cộng tử.\nVí dụ: 1/2 + 1/3 = 3/6 + 2/6 = 5/6',
+            'trừ': 'Quy đồng mẫu rồi trừ tử.\nVí dụ: 3/4 - 1/2 = 3/4 - 2/4 = 1/4',
+            'nhân': 'Nhân tử với tử, mẫu với mẫu.\nVí dụ: 2/3 × 3/4 = 6/12 = 1/2',
+            'chia': 'Nhân với phân số nghịch đảo.\nVí dụ: 1/2 : 1/4 = 1/2 × 4 = 2',
+            'quy đồng': 'Tìm mẫu chung, quy đồng.\nVí dụ: 1/2 và 1/3 → mẫu 6',
+            'nghịch đảo': 'Đổi tử và mẫu.\nVí dụ: Nghịch đảo của 2/3 là 3/2',
+            'dấu': 'Cùng dấu: +, khác dấu: -\nVí dụ: (-1/2) × (-1/3) = 1/6',
+            'rút gọn': 'Chia tử và mẫu cho ước chung.\nVí dụ: 6/8 = 3/4'
+        };
+
+        function toggleChatbot() {
+            const window = document.getElementById('chatbot-window');
+            const toggle = document.getElementById('chatbot-toggle');
+            
+            if (window.style.display === 'flex') {
+                window.style.display = 'none';
+                toggle.innerHTML = '💬';
+            } else {
+                window.style.display = 'flex';
+                toggle.innerHTML = '✖';
+            }
+        }
+
+        function addBotMessage(text) {
+            const container = document.getElementById('chatbot-messages');
+            const div = document.createElement('div');
+            div.className = 'chat-message bot';
+            div.innerHTML = `
+                <div class="bot-avatar">💬</div>
+                <div class="message-content">${text}</div>
+            `;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+            if (window.MathJax) MathJax.typeset();
+        }
+
+        function addUserMessage(text) {
+            const container = document.getElementById('chatbot-messages');
+            const div = document.createElement('div');
+            div.className = 'chat-message user';
+            div.innerHTML = `<div class="message-content">${text}</div>`;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function getBotResponse(question) {
+            const q = question.toLowerCase();
+            
+            for (const [keyword, answer] of Object.entries(CHATBOT_KNOWLEDGE)) {
+                if (q.includes(keyword)) {
+                    return answer;
+                }
+            }
+            
+            return 'Câu hỏi này ngoài phạm vi Bài 2. Hãy hỏi về cộng, trừ, nhân, chia số hữu tỉ.';
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatbot-input');
+            const question = input.value.trim();
+            if (!question) return;
+            
+            addUserMessage(question);
+            input.value = '';
+            
+            setTimeout(() => {
+                const response = getBotResponse(question);
+                addBotMessage(response);
+            }, 500);
+        }
+
+        function sendQuickQuestion(question) {
+            addUserMessage(question);
+            setTimeout(() => {
+                const response = getBotResponse(question);
+                addBotMessage(response);
+            }, 500);
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
